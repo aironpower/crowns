@@ -153,6 +153,28 @@ export function ProfilePage() {
             </p>
           ) : null}
         </div>
+        <label className="field inline">
+          <span className="muted small">{t("profile.language")}</span>
+          <select
+            className="select"
+            value={locale}
+            onChange={(event) => {
+              const next = event.target.value as Locale;
+              setProfileLocale(next);
+              setLocale(next);
+              // el idioma se guarda solo: es una preferencia, no un formulario
+              updateProfile(user.id, { locale: next })
+                .then(applyProfile)
+                .catch(() => undefined);
+            }}
+          >
+            {LOCALE_CODES.map((code) => (
+              <option key={code} value={code} lang={code}>
+                {LOCALES[code].label}
+              </option>
+            ))}
+          </select>
+        </label>
         <button type="button" className="button ghost" onClick={() => void signOut()}>
           {t("nav.signOut")}
         </button>
@@ -255,21 +277,6 @@ export function ProfilePage() {
           <label className="field">
             {t("profile.displayName")}
             <input value={displayName} maxLength={40} onChange={(event) => setDisplayName(event.target.value)} />
-          </label>
-
-          <label className="field">
-            {t("profile.language")}
-            <select
-              className="select"
-              value={locale}
-              onChange={(event) => setProfileLocale(event.target.value as Locale)}
-            >
-              {LOCALE_CODES.map((code) => (
-                <option key={code} value={code} lang={code}>
-                  {LOCALES[code].label}
-                </option>
-              ))}
-            </select>
           </label>
 
           <div className="row">

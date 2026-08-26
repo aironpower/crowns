@@ -306,11 +306,23 @@ const SCRIPT = `(async () => {
   ok(location.pathname === "/terms", "desde privacidad se llega a las condiciones");
   ok(/condiciones/i.test($(".legal")?.innerText ?? ""), "las condiciones se muestran");
 
-  // cambio de idioma
-  const select = $$("select").find(s => [...s.options].some(o => o.value === "en"));
-  select.value = "en";
-  select.dispatchEvent(new Event("change", { bubbles: true }));
-  await new Promise(r => setTimeout(r, 300));
+  // firma del pie
+  const autor = $$(".site-footer a").find(a => /softie\.dev/i.test(a.href));
+  ok(!!autor, "el pie enlaza a softie.dev");
+  ok(/Softie Development/i.test(autor?.textContent ?? ""), "y lo firma Softie Development");
+
+  // cambio de idioma: icono de la bola del mundo (sin sesión)
+  ok($$("header select").length === 0, "la cabecera ya no lleva el desplegable de idioma");
+  const globo = $(".language-menu .icon-button");
+  ok(!!globo, "hay icono de idioma en la cabecera");
+  globo.click();
+  await new Promise(r => setTimeout(r, 250));
+  const opciones = $$(".language-list button").map(b => b.textContent.trim());
+  ok(opciones.length === 6, "el menú ofrece los seis idiomas");
+  ok(opciones.join(",") === "Català,Deutsch,English,Español,Français,Português", "en orden alfabético: " + opciones.join(", "));
+  $$(".language-list button").find(b => b.textContent.trim() === "English").click();
+  await new Promise(r => setTimeout(r, 400));
+  ok(!$(".language-list"), "el menú se cierra al elegir");
   ok(/Sign in|Your account/i.test($("main").textContent), "la interfaz cambia a inglés");
   ok(document.documentElement.lang === "en", "el atributo lang del documento se actualiza");
 

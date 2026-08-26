@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { LOCALES, LOCALE_CODES, useI18n, type Locale } from "../i18n";
 import { readTheme, saveTheme, type ThemeChoice } from "../lib/localStore";
@@ -38,6 +38,7 @@ export function ThemeToggle() {
   );
 }
 
+/** Desplegable de idiomas. Se usa en el perfil, donde hay sitio para él. */
 export function LanguagePicker({ onChange }: { onChange?: (locale: Locale) => void }) {
   const { locale, setLocale, t } = useI18n();
   return (
@@ -57,6 +58,74 @@ export function LanguagePicker({ onChange }: { onChange?: (locale: Locale) => vo
         </option>
       ))}
     </select>
+  );
+}
+
+/**
+ * Idioma en la cabecera para quien no ha entrado: un icono que despliega la
+ * lista. Ocupa lo que un botón, que es lo que hace falta en un móvil. Con la
+ * sesión iniciada el idioma se cambia desde el perfil y viaja con la cuenta.
+ */
+export function LanguageMenu() {
+  const { locale, setLocale, t } = useI18n();
+  const [open, setOpen] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const away = (event: MouseEvent) => {
+      if (!box.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", away);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("mousedown", away);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [open]);
+
+  return (
+    <div className="language-menu" ref={box}>
+      <button
+        type="button"
+        className="icon-button"
+        onClick={() => setOpen((value) => !value)}
+        title={t("lang.change")}
+        aria-label={t("lang.change")}
+        aria-expanded={open}
+        aria-haspopup="menu"
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z" />
+        </svg>
+      </button>
+
+      {open ? (
+        <ul className="language-list" role="menu">
+          {LOCALE_CODES.map((code) => (
+            <li key={code}>
+              <button
+                type="button"
+                role="menuitemradio"
+                aria-checked={code === locale}
+                lang={code}
+                className={code === locale ? "active" : ""}
+                onClick={() => {
+                  setLocale(code);
+                  setOpen(false);
+                }}
+              >
+                {LOCALES[code].label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
   );
 }
 
@@ -101,7 +170,7 @@ export function Header() {
       </nav>
 
       <div className="header-actions">
-        <LanguagePicker />
+        {user ? null : <LanguageMenu />}
         <ThemeToggle />
       </div>
     </header>

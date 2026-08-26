@@ -149,6 +149,11 @@ export const en: Dict = {
 
   "game.archivedDaily": "Daily puzzle from {date}.",
 
+  "lang.change": "Change language",
+  "footer.madeBy": "Made by",
+  "donate.link": "Support the project",
+  "donate.hint": "Crowns is free and ad-free. If you enjoy it, you can chip in.",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };

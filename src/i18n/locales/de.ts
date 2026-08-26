@@ -149,6 +149,11 @@ export const de: Dict = {
 
   "game.archivedDaily": "Tagesrätsel vom {date}.",
 
+  "lang.change": "Sprache wechseln",
+  "footer.madeBy": "Gemacht von",
+  "donate.link": "Projekt unterstützen",
+  "donate.hint": "Crowns ist kostenlos und werbefrei. Wenn es dir gefällt, kannst du etwas beisteuern.",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };

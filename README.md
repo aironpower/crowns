@@ -89,6 +89,18 @@ Hay dos formas de cambiarlo, ninguna imprescindible:
 Decisión actual: **dejarlo como está**. Funciona correctamente y solo afecta a lo que
 se lee en la pantalla de consentimiento.
 
+## Firma y donaciones
+
+El pie lleva la firma «Hecho por Softie Development» con enlace a softie.dev, y
+debajo un enlace discreto de donación. Los dos salen de
+[`src/config/site.ts`](src/config/site.ts).
+
+**El bloque de donación solo aparece si `donateUrl` tiene valor**, así que ahora
+mismo está oculto. GitHub Sponsors admite organizaciones, pero hay que solicitarlo
+y esperar aprobación: hasta entonces `github.com/sponsors/Softie-Development`
+redirige al perfil de la organización. Cuando esté aprobado, pon esa URL en
+`donateUrl` y el enlace aparece solo.
+
 ## Textos legales
 
 La política de privacidad y las condiciones del servicio están en el propio juego,
@@ -116,7 +128,7 @@ antes de darlos por buenos.
 | `src/game/` | Motor puro: reglas, solucionador, generador y el hook `useGame`. Sin React salvo el hook. |
 | `src/components/` | Tablero y su miniatura, cabecera, paleta, selector de idioma y tema. |
 | `src/features/` | Una carpeta por pantalla: `play`, `auth`, `profile`, `history`, `community`. |
-| `src/i18n/` | Proveedor de idioma y los seis diccionarios. `es.ts` define el tipo: si falta una clave en otro idioma, no compila. |
+| `src/i18n/` | Proveedor de idioma y los seis diccionarios. `es.ts` define el tipo: si falta una clave en otro idioma, no compila. Sin sesión el idioma se cambia desde el icono del globo; con sesión, desde el perfil, y viaja con la cuenta. |
 | `src/lib/` | Cliente de Supabase, consultas y almacenamiento local del invitado. |
 | `supabase/migrations/` | Esquema, RLS, funciones y vistas. |
 | `legacy/standalone.html` | La primera versión del juego en un solo archivo, sin dependencias. |

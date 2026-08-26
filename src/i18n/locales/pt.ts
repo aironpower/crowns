@@ -149,6 +149,11 @@ export const pt: Dict = {
 
   "game.archivedDaily": "Puzzle do dia {date}.",
 
+  "lang.change": "Mudar idioma",
+  "footer.madeBy": "Feito por",
+  "donate.link": "Apoiar o projeto",
+  "donate.hint": "O Crowns é gratuito e sem anúncios. Se gostas, podes dar uma ajuda.",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

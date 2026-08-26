@@ -147,6 +147,11 @@ export const es = {
 
   "game.archivedDaily": "Puzle del día del {date}.",
 
+  "lang.change": "Cambiar idioma",
+  "footer.madeBy": "Hecho por",
+  "donate.link": "Apoyar el proyecto",
+  "donate.hint": "Crowns es gratis y sin anuncios. Si te gusta, puedes echar una mano.",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };

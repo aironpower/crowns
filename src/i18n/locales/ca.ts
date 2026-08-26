@@ -149,6 +149,11 @@ export const ca: Dict = {
 
   "game.archivedDaily": "Puzle del dia del {date}.",
 
+  "lang.change": "Canviar idioma",
+  "footer.madeBy": "Fet per",
+  "donate.link": "Donar suport al projecte",
+  "donate.hint": "Crowns és gratuït i sense anuncis. Si t'agrada, pots fer un cop de mà.",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

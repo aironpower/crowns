@@ -10,6 +10,7 @@ import { LegalPage } from "./features/legal/LegalPage";
 import { useAuth } from "./features/auth/AuthProvider";
 import { useI18n } from "./i18n";
 import { isSupabaseConfigured } from "./lib/supabase";
+import { SITE, donationsEnabled } from "./config/site";
 
 export default function App() {
   const { t, setLocale } = useI18n();
@@ -51,6 +52,23 @@ export default function App() {
           <span aria-hidden="true"> · </span>
           <Link to="/terms">{t("legal.terms")}</Link>
         </p>
+        <p>
+          {t("footer.madeBy")}{" "}
+          <a href={SITE.authorUrl} target="_blank" rel="noopener noreferrer">
+            {SITE.author}
+          </a>
+        </p>
+        {donationsEnabled() ? (
+          <p className="donate">
+            <a className="donate-link" href={SITE.donateUrl} target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                <path d="M12 21s-7.5-4.7-9.6-9A5.3 5.3 0 0 1 12 6.5 5.3 5.3 0 0 1 21.6 12c-2.1 4.3-9.6 9-9.6 9z" />
+              </svg>
+              {t("donate.link")}
+            </a>
+            <span className="muted small">{t("donate.hint")}</span>
+          </p>
+        ) : null}
       </footer>
     </div>
   );
