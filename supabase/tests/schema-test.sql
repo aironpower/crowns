@@ -23,6 +23,7 @@ end $$;
 
 \echo '--- aplicando la migración ---'
 \i /work/migrations/0001_init.sql
+\i /work/migrations/0002_player_settings.sql
 
 \echo '--- 1. trigger de perfil al registrarse ---'
 insert into auth.users (id, email, raw_user_meta_data)
@@ -112,4 +113,22 @@ do $$ begin
   if found then raise notice 'FALLO: pudo editar el perfil de otro'; else raise notice 'OK no puede editar perfiles ajenos'; end if;
 end $$;
 select count(*) as perfiles_visibles_para_todos from public.profiles;
+reset role;
+
+\echo '--- 12. preferencias del jugador ---'
+select column_name, data_type, column_default
+  from information_schema.columns
+ where table_schema = 'public' and table_name = 'profiles'
+   and column_name in ('auto_mark','show_conflicts')
+ order by column_name;
+select username, auto_mark, show_conflicts from public.profiles order by username;
+-- el dueño puede cambiarlas
+set role authenticated;
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+update public.profiles set auto_mark = true where id = '11111111-1111-1111-1111-111111111111';
+select username, auto_mark from public.profiles where id = '11111111-1111-1111-1111-111111111111';
+do $$ begin
+  update public.profiles set auto_mark = true where id = '22222222-2222-2222-2222-222222222222';
+  if found then raise notice 'FALLO: pudo cambiar las preferencias de otro'; else raise notice 'OK no puede tocar las preferencias ajenas'; end if;
+end $$;
 reset role;

@@ -13,11 +13,13 @@ export interface SolveSummary {
 
 interface Options {
   onSolved: (summary: SolveSummary) => void;
+  /** Preferencia del jugador; vive fuera del juego porque se guarda en su perfil. */
+  autoMark: boolean;
 }
 
 const emptyBoard = (size: number): CellState[] => new Array(size * size).fill(EMPTY) as CellState[];
 
-export function useGame({ onSolved }: Options) {
+export function useGame({ onSolved, autoMark }: Options) {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [mode, setMode] = useState<PuzzleMode>("practice");
   const [cells, setCells] = useState<CellState[]>([]);
@@ -27,8 +29,6 @@ export function useGame({ onSolved }: Options) {
   const [moves, setMoves] = useState(0);
   const [message, setMessage] = useState("");
   const [elapsedMs, setElapsedMs] = useState(0);
-  const [autoMark, setAutoMark] = useState(true);
-  const [showConflicts, setShowConflicts] = useState(true);
   const [hintCell, setHintCell] = useState<number | null>(null);
 
   const history = useRef<CellState[][]>([]);
@@ -38,6 +38,8 @@ export function useGame({ onSolved }: Options) {
   const solvedRef = useRef(false);
   const onSolvedRef = useRef(onSolved);
   onSolvedRef.current = onSolved;
+  const autoMarkRef = useRef(autoMark);
+  autoMarkRef.current = autoMark;
 
   const [historyDepth, setHistoryDepth] = useState(0);
   const [running, setRunning] = useState(false);
@@ -136,13 +138,13 @@ export function useGame({ onSolved }: Options) {
         if (record) pushHistory(current);
         let board = current.slice() as CellState[];
         board[index] = next;
-        if (next === CROWN && autoMark) board = withAutoMarks(board, index, puzzle.size, puzzle.regions);
+        if (next === CROWN && autoMarkRef.current) board = withAutoMarks(board, index, puzzle.size, puzzle.regions);
         return board;
       });
       setMoves((m) => m + 1);
       setMessage("");
     },
-    [puzzle, autoMark, pushHistory, startClock, withAutoMarks],
+    [puzzle, pushHistory, startClock, withAutoMarks],
   );
 
   const cycleCell = useCallback(
@@ -222,12 +224,12 @@ export function useGame({ onSolved }: Options) {
     setCells((board) => {
       let next = board.slice() as CellState[];
       next[target] = CROWN;
-      if (autoMark) next = withAutoMarks(next, target, size, regions);
+      if (autoMarkRef.current) next = withAutoMarks(next, target, size, regions);
       return next;
     });
     setHintCell(target);
     return "revealed";
-  }, [cells, puzzle, autoMark, pushHistory, startClock, withAutoMarks]);
+  }, [cells, puzzle, pushHistory, startClock, withAutoMarks]);
 
   // ------------------------------------------------------- comprobación
   const { bad, crowns } = useMemo(() => {
@@ -266,10 +268,6 @@ export function useGame({ onSolved }: Options) {
     message,
     setMessage,
     hintCell,
-    autoMark,
-    setAutoMark,
-    showConflicts,
-    setShowConflicts,
     canUndo: historyDepth > 0,
     newGame,
     loadPuzzle,

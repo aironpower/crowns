@@ -134,6 +134,9 @@ export const es = {
   "legal.terms": "Condiciones del servicio",
   "legal.pending": "Pendiente: faltan por completar los datos del responsable en src/legal/entity.ts.",
 
+  "win.shareLink": "Enlace para compartir",
+  "win.shareFail": "Copia el enlace a mano:",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };

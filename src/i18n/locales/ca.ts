@@ -136,6 +136,9 @@ export const ca: Dict = {
   "legal.terms": "Condicions del servei",
   "legal.pending": "Pendent: falten les dades del responsable a src/legal/entity.ts.",
 
+  "win.shareLink": "Enllaç per compartir",
+  "win.shareFail": "Copia l'enllaç a mà:",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

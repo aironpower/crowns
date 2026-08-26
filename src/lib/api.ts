@@ -32,27 +32,42 @@ export async function submitPlay(input: SubmitPlayInput): Promise<void> {
 }
 
 export async function fetchProfile(userId: string): Promise<Profile | null> {
-  const { data, error } = await db()
-    .from("profiles")
-    .select("id, username, display_name, locale, created_at")
-    .eq("id", userId)
-    .maybeSingle();
+  // select("*") a propósito: si la migración de preferencias no está aplicada,
+  // las columnas simplemente no llegan en vez de provocar un error.
+  const { data, error } = await db().from("profiles").select("*").eq("id", userId).maybeSingle();
   if (error) throw error;
   return (data as Profile) ?? null;
 }
 
 export async function updateProfile(
   userId: string,
-  patch: { username?: string; display_name?: string | null; locale?: Locale },
+  patch: {
+    username?: string;
+    display_name?: string | null;
+    locale?: Locale;
+    auto_mark?: boolean;
+    show_conflicts?: boolean;
+  },
 ): Promise<Profile> {
   const { data, error } = await db()
     .from("profiles")
     .update({ ...patch, updated_at: new Date().toISOString() })
     .eq("id", userId)
-    .select("id, username, display_name, locale, created_at")
+    .select("*")
     .single();
   if (error) throw error;
   return data as Profile;
+}
+
+/** Guarda las preferencias del tablero. Silencioso: si falla, quedan en local. */
+export async function saveSettings(
+  userId: string,
+  settings: { autoMark: boolean; showConflicts: boolean },
+): Promise<void> {
+  await db()
+    .from("profiles")
+    .update({ auto_mark: settings.autoMark, show_conflicts: settings.showConflicts })
+    .eq("id", userId);
 }
 
 export async function fetchMyPlays(userId: string, limit = 100): Promise<PlayRow[]> {

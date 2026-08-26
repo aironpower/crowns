@@ -136,6 +136,9 @@ export const pt: Dict = {
   "legal.terms": "Condições do serviço",
   "legal.pending": "Pendente: faltam os dados do responsável em src/legal/entity.ts.",
 
+  "win.shareLink": "Link para partilhar",
+  "win.shareFail": "Copia o link à mão:",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

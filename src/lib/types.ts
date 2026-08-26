@@ -7,6 +7,15 @@ export interface Profile {
   display_name: string | null;
   locale: Locale;
   created_at: string;
+  /** Opcionales: no existen hasta aplicar la migración 0002. */
+  auto_mark?: boolean;
+  show_conflicts?: boolean;
+}
+
+/** Las dos opciones del tablero. */
+export interface GameSettings {
+  autoMark: boolean;
+  showConflicts: boolean;
 }
 
 export interface PlayRow {

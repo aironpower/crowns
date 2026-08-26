@@ -1,5 +1,5 @@
 import type { Size } from "../game/types";
-import type { LocalPlay } from "./types";
+import type { GameSettings, LocalPlay } from "./types";
 
 const PLAYS_KEY = "crowns.localPlays";
 const BEST_KEY = "crowns.best";
@@ -58,6 +58,24 @@ export function saveBestTime(size: Size, ms: number): boolean {
   all[String(size)] = ms;
   write(BEST_KEY, all);
   return true;
+}
+
+const SETTINGS_KEY = "crowns.settings";
+
+/** Las dos opciones del tablero nacen desactivadas. */
+export const DEFAULT_SETTINGS: GameSettings = { autoMark: false, showConflicts: false };
+
+export function readSettings(): GameSettings {
+  const stored = read<Partial<GameSettings>>(SETTINGS_KEY, {});
+  return {
+    autoMark: typeof stored.autoMark === "boolean" ? stored.autoMark : DEFAULT_SETTINGS.autoMark,
+    showConflicts:
+      typeof stored.showConflicts === "boolean" ? stored.showConflicts : DEFAULT_SETTINGS.showConflicts,
+  };
+}
+
+export function writeSettings(settings: GameSettings): void {
+  write(SETTINGS_KEY, settings);
 }
 
 export type ThemeChoice = "light" | "dark" | "system";

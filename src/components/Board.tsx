@@ -52,7 +52,6 @@ export function Board({ puzzle, cells, bad, showConflicts, hintCell, frozen, onC
   const boardRef = useRef<HTMLDivElement>(null);
   const drag = useRef<{ start: number; painting: boolean } | null>(null);
   const [cellPx, setCellPx] = useState(48);
-  const [hovered, setHovered] = useState<number | null>(null);
 
   useEffect(() => {
     const resize = () => {
@@ -90,9 +89,9 @@ export function Board({ puzzle, cells, bad, showConflicts, hintCell, frozen, onC
   };
 
   const handleMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!drag.current || frozen) return;
     const index = indexFromEvent(event);
-    if (event.pointerType === "mouse") setHovered(index);
-    if (!drag.current || frozen || index === null) return;
+    if (index === null) return;
     if (!drag.current.painting) {
       if (index === drag.current.start) return; // aún no se ha movido de casilla
       drag.current.painting = true;
@@ -108,8 +107,6 @@ export function Board({ puzzle, cells, bad, showConflicts, hintCell, frozen, onC
   };
 
   const size = puzzle.size;
-  const hoveredRow = hovered === null ? -1 : Math.floor(hovered / size);
-  const hoveredCol = hovered === null ? -1 : hovered % size;
 
   return (
     <div
@@ -122,21 +119,17 @@ export function Board({ puzzle, cells, bad, showConflicts, hintCell, frozen, onC
       onPointerMove={handleMove}
       onPointerUp={handleUp}
       onPointerCancel={handleUp}
-      onPointerLeave={() => setHovered(null)}
       onContextMenu={(event) => event.preventDefault()}
     >
       {cells.map((state, index) => {
         const swatch = PALETTE[colors[puzzle.regions[index]]];
         const row = Math.floor(index / size);
         const col = index % size;
-        const guide = hovered !== null && (row === hoveredRow || col === hoveredCol);
         const classes = [
           "cell",
           edges[index],
           showConflicts && bad.has(index) ? "conflict" : "",
           hintCell === index ? "hinted" : "",
-          guide ? "guide" : "",
-          hovered === index ? "hovered" : "",
         ]
           .filter(Boolean)
           .join(" ");

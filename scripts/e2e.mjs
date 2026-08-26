@@ -123,6 +123,18 @@ const SCRIPT = `(async () => {
   ok(true, hasSupabase ? "(build con Supabase configurado)" : "avisa de que Supabase no está configurado");
   ok(new Set(cells.map(c => c.style.getPropertyValue("--region-l"))).size === n, "hay " + n + " colores de región");
 
+  // preferencias: nacen desactivadas y sobreviven a recargar
+  const casillas = () => $$(".switches input[type=checkbox]");
+  ok(casillas().length === 2, "hay dos interruptores de preferencias");
+  ok(casillas().every(c => !c.checked), "las dos opciones empiezan desactivadas");
+  casillas()[0].click();
+  await new Promise(r => setTimeout(r, 200));
+  ok(casillas()[0].checked, "se puede activar 'marcar ✕ automáticas'");
+  const guardado = JSON.parse(localStorage.getItem("crowns.settings") || "{}");
+  ok(guardado.autoMark === true, "la preferencia se guarda en el navegador");
+  casillas()[0].click();
+  await new Promise(r => setTimeout(r, 200));
+
   // ciclo de estados
   const hasCrown = (el) => !!el.querySelector(".crown");
   const hasMark = (el) => !!el.querySelector(".mark");
@@ -187,6 +199,15 @@ const SCRIPT = `(async () => {
   const winText = $(".win-card")?.textContent ?? "";
   ok(/8×8/.test(winText), "el resumen muestra el tamaño: " + winText.slice(0, 60));
   ok(/navegador|browser/i.test(winText), "avisa de que se guardó en local (invitado)");
+
+  // compartir
+  const btnCompartir = $$(".win-actions button").find(b => /compartir|share|partager|teilen|partilhar/i.test(b.textContent));
+  ok(!!btnCompartir, "el diálogo de victoria ofrece compartir");
+  btnCompartir.click();
+  await new Promise(r => setTimeout(r, 900));
+  const campo = $(".share-box input");
+  ok(!!campo, "aparece el enlace para compartir");
+  ok((campo?.value ?? "").includes("?board="), "el enlace lleva el tablero: " + (campo?.value ?? "").slice(-24));
 
   // navegación entre secciones
   const go = async (name) => {

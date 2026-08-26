@@ -10,6 +10,7 @@ import { SIZES, type Size } from "../../game/types";
 import { useGame, type SolveSummary } from "../../game/useGame";
 import { addLocalPlay, bestTime, localDailyDone, saveBestTime } from "../../lib/localStore";
 import { hasPlayedDaily, submitPlay } from "../../lib/api";
+import { useSettings } from "../../lib/useSettings";
 
 type SaveState = "idle" | "saving" | "saved" | "local" | "error";
 
@@ -18,7 +19,7 @@ const DAILY_SIZE: Size = 8;
 export function PlayPage() {
   const { t } = useI18n();
   const { user, configured } = useAuth();
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
 
   const [size, setSize] = useState<Size>(8);
   const [saveState, setSaveState] = useState<SaveState>("idle");
@@ -26,6 +27,8 @@ export function PlayPage() {
   const [best, setBest] = useState<number | null>(null);
   const [dailyDone, setDailyDone] = useState(false);
   const [shared, setShared] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
+  const [copyFailed, setCopyFailed] = useState(false);
   const today = todayKey();
 
   const handleSolved = useCallback(
@@ -70,7 +73,8 @@ export function PlayPage() {
     [user, configured, today],
   );
 
-  const game = useGame({ onSolved: handleSolved });
+  const settings = useSettings();
+  const game = useGame({ onSolved: handleSolved, autoMark: settings.autoMark });
   const { loadPuzzle, newGame } = game;
   const started = useRef(false);
 
@@ -78,6 +82,8 @@ export function PlayPage() {
     setSaveState("idle");
     setRecord(false);
     setShared(false);
+    setShareUrl("");
+    setCopyFailed(false);
   };
 
   const startPractice = useCallback(
@@ -153,15 +159,30 @@ export function PlayPage() {
     else if (result === "revealed") game.setMessage(t("game.hintRevealed"));
   };
 
+  /**
+   * Compartir sin callejones sin salida: primero el diálogo nativo (móvil),
+   * luego el portapapeles y, si el navegador lo bloquea, el enlace a la vista
+   * y seleccionado para copiarlo a mano.
+   */
   const share = async () => {
     if (!game.puzzle) return;
     const url = `${window.location.origin}${window.location.pathname}?board=${encodeURIComponent(game.puzzle.fingerprint)}`;
+    setShareUrl(url);
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: t("app.title"), url });
+        return;
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") return; // lo canceló
+      }
+    }
     try {
       await navigator.clipboard.writeText(url);
       setShared(true);
       window.setTimeout(() => setShared(false), 2500);
     } catch {
-      setParams({ board: game.puzzle.fingerprint });
+      setCopyFailed(true);
     }
   };
 
@@ -249,7 +270,7 @@ export function PlayPage() {
               puzzle={game.puzzle}
               cells={game.cells}
               bad={game.bad}
-              showConflicts={game.showConflicts}
+              showConflicts={settings.showConflicts}
               hintCell={game.hintCell}
               frozen={game.solved}
               onCycle={game.cycleCell}
@@ -275,6 +296,18 @@ export function PlayPage() {
                       {shared ? t("win.copied") : t("win.share")}
                     </button>
                   </div>
+                  {shareUrl && (shared || copyFailed) ? (
+                    <div className="share-box">
+                      {copyFailed ? <p className="muted small">{t("win.shareFail")}</p> : null}
+                      <input
+                        readOnly
+                        value={shareUrl}
+                        aria-label={t("win.shareLink")}
+                        onFocus={(event) => event.currentTarget.select()}
+                        ref={(node) => node?.select()}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </div>
             ) : null}
@@ -304,14 +337,18 @@ export function PlayPage() {
         <div className="grow" />
         <div className="switches">
         <label className="toggle">
-          <input type="checkbox" checked={game.autoMark} onChange={(e) => game.setAutoMark(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={settings.autoMark}
+            onChange={(event) => settings.setAutoMark(event.target.checked)}
+          />
           {t("game.autoX")}
         </label>
         <label className="toggle">
           <input
             type="checkbox"
-            checked={game.showConflicts}
-            onChange={(e) => game.setShowConflicts(e.target.checked)}
+            checked={settings.showConflicts}
+            onChange={(event) => settings.setShowConflicts(event.target.checked)}
           />
           {t("game.showConflicts")}
         </label>

@@ -572,17 +572,8 @@ input:hover {
   }
 }
 
-/* guía de fila y columna al pasar el ratón */
-.cell.guide::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--guide);
-  pointer-events: none;
-}
-.cell.hovered {
-  filter: brightness(1.08);
-  z-index: 2;
+.cell:hover {
+  filter: brightness(1.06);
 }
 .cell:focus-visible {
   z-index: 3;
@@ -774,6 +765,19 @@ input:hover {
   gap: 8px;
   justify-content: center;
   margin-top: 14px;
+}
+
+.share-box {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.share-box input {
+  width: 100%;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-overflow: ellipsis;
 }
 
 .rules summary {

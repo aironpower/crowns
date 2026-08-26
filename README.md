@@ -16,7 +16,7 @@ Funciona **sin configurar nada**: se juega como invitado y el historial se guard
 ## Conectar Supabase
 
 1. **Crea el proyecto** en [supabase.com](https://supabase.com) → *New project*. Apunta la contraseña de la base de datos (no hace falta para la app, sí para el CLI).
-2. **Crea las tablas**: panel → *SQL Editor* → *New query* → pega el contenido de [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) → *Run*.
+2. **Crea las tablas**: panel → *SQL Editor* → *New query* → pega el contenido de [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) → *Run*. Repite con [`0002_player_settings.sql`](supabase/migrations/0002_player_settings.sql).
    Con el CLI instalado: `supabase link --project-ref TU-REF && supabase db push`.
 3. **Copia la clave**: panel → *Project Settings* → *API Keys* → `anon` / `public`, y pégala en `.env.local`:
 
@@ -145,7 +145,7 @@ baje de ΔE 20 (la peor medida sobre 2860 pares es 27,6).
 
 - `puzzles` guarda cada tablero una sola vez, identificado por su *fingerprint* (`"8:0011223…"`, las regiones renumeradas por orden de aparición).
 - `plays` guarda cada partida resuelta.
-- `profiles` es el perfil público, creado por un trigger al registrarse.
+- `profiles` es el perfil público, creado por un trigger al registrarse. Guarda también las dos preferencias del tablero (marcar ✕ automáticas y resaltar conflictos), que así acompañan al jugador entre navegadores; quien juega sin cuenta las conserva en el navegador. Ambas nacen desactivadas, y si la migración `0002` no está aplicada la aplicación sigue funcionando con las preferencias solo en local.
 - Las partidas **no se insertan directamente**: pasan por la función `submit_play()`, que comprueba en el servidor que la solución enviada cumple las reglas y que las regiones son canónicas. Las políticas RLS dejan leer a todo el mundo (para el ranking) y escribir solo lo propio.
 - Vistas listas para consultar: `recent_activity`, `daily_leaderboard`, `leaderboard_by_size` y `player_stats`.
 

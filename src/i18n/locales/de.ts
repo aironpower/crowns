@@ -136,6 +136,9 @@ export const de: Dict = {
   "legal.terms": "Nutzungsbedingungen",
   "legal.pending": "Ausstehend: Die Angaben zum Betreiber fehlen noch in src/legal/entity.ts.",
 
+  "win.shareLink": "Link zum Teilen",
+  "win.shareFail": "Kopiere den Link von Hand:",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };
