@@ -188,6 +188,9 @@ export const pt: Dict = {
   "league.tabToday": "Hoje",
   "league.tabMonth": "Mês",
 
+  "rank.penalty": "Cada dica soma 30 s ao tempo de classificação.",
+  "rank.realTime": "Tempo real {time}, mais {count} dica(s)",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

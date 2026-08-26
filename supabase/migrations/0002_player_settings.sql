@@ -7,6 +7,14 @@
 --
 -- Ambas nacen desactivadas, igual que en la interfaz.
 
+-- Comprobación de orden: sin la migración anterior, el error que sale es
+-- confuso ("relation does not exist" en mitad del archivo).
+do $$ begin
+  if to_regclass('public.profiles') is null then
+    raise exception 'Falta 0001_init.sql: aplícala antes que esta.';
+  end if;
+end $$;
+
 alter table public.profiles
   add column if not exists auto_mark      boolean not null default false,
   add column if not exists show_conflicts boolean not null default false;

@@ -12,15 +12,19 @@ concreto; los rankings globales solo tienen sentido cuando hay volumen.
 - **Ligas privadas**: grupos cerrados con código de seis caracteres y ranking propio del puzle del día.
 - **Temporadas mensuales**: puntos por posición del día (10, 8, 6… y 1 por terminar), sumados por mes. Global en Comunidad y dentro de cada liga.
 - **Puesto en el tablero**: al resolver, «2.º de 37 · a 14 s del primero».
+- **Las pistas penalizan**: se clasifica por tiempo ajustado, 30 segundos por pista.
+  Se descartó normalizar por la mediana del día porque con pocos jugadores la
+  mediana es ruido; una penalización fija se entiende sin documentación. El
+  tiempo real se sigue guardando y mostrando en el detalle.
 
 ## Siguiente
 
-### Puntuación en vez de tiempo bruto — esfuerzo medio
+### ¿Separar las partidas con ✕ automáticas? — sin decidir
 
-Hoy el ranking premia a quien juega con las ✕ automáticas activadas, que no es
-lo mismo que jugar mejor. Una puntuación que normalice por la mediana del día y
-penalice las pistas sería más justa. **Conviene decidirlo antes de que haya
-récords que la gente considere suyos.**
+Quien juega con las marcas automáticas hace muchos menos clics, así que va más
+rápido. No es hacer trampa —está disponible para todos— pero mezcla dos formas
+de jugar en la misma tabla. Opciones: dejarlo así, marcar esas partidas en el
+ranking, o separarlas en dos clasificaciones. Con pocos jugadores, dejarlo.
 
 ### Duelo en tiempo real — esfuerzo alto
 

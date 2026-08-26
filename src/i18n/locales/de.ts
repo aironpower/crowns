@@ -188,6 +188,9 @@ export const de: Dict = {
   "league.tabToday": "Heute",
   "league.tabMonth": "Monat",
 
+  "rank.penalty": "Jeder Tipp zählt 30 s auf die Wertungszeit.",
+  "rank.realTime": "Echte Zeit {time}, plus {count} Tipp(s)",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };

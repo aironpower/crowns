@@ -186,6 +186,9 @@ export const es = {
   "league.tabToday": "Hoy",
   "league.tabMonth": "Mes",
 
+  "rank.penalty": "Cada pista suma 30 s al tiempo de clasificación.",
+  "rank.realTime": "Tiempo real {time}, más {count} pista(s)",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };

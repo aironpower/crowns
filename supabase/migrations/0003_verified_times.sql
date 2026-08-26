@@ -13,6 +13,14 @@
 -- cliente antiguo) se guardan igual, pero marcadas como no verificadas.
 
 -- ------------------------------------------------------------- intentos
+-- Comprobación de orden: sin la migración anterior, el error que sale es
+-- confuso ("relation does not exist" en mitad del archivo).
+do $$ begin
+  if to_regclass('public.plays') is null then
+    raise exception 'Falta 0001_init.sql: aplícala antes que esta.';
+  end if;
+end $$;
+
 create table if not exists public.attempts (
   id           uuid primary key default gen_random_uuid(),
   user_id      uuid not null references auth.users on delete cascade,

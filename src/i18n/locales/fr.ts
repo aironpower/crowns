@@ -188,6 +188,9 @@ export const fr: Dict = {
   "league.tabToday": "Aujourd'hui",
   "league.tabMonth": "Mois",
 
+  "rank.penalty": "Chaque indice ajoute 30 s au temps de classement.",
+  "rank.realTime": "Temps réel {time}, plus {count} indice(s)",
+
   "theme.toggle": "Changer de thème",
   "lang.label": "Langue",
 };

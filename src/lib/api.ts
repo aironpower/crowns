@@ -138,6 +138,17 @@ export async function fetchActivity(limit = 30): Promise<ActivityRow[]> {
   return (data ?? []) as ActivityRow[];
 }
 
+/** Tiempo por el que se clasifica: el ajustado si existe, y si no el real. */
+export const rankingTime = (row: { duration_ms: number; adjusted_ms?: number }): number =>
+  row.adjusted_ms ?? row.duration_ms;
+
+/**
+ * El orden lo hace el cliente, no PostgREST: así la lista sale bien ordenada
+ * tanto si la migración 0006 (que añade `adjusted_ms`) está aplicada como si no.
+ */
+const byRankingTime = (rows: DailyRankRow[]) =>
+  [...rows].sort((a, b) => rankingTime(a) - rankingTime(b));
+
 export async function fetchDailyRanking(date: string, limit = 20): Promise<DailyRankRow[]> {
   const { data, error } = await db()
     .from("daily_leaderboard")
@@ -146,7 +157,7 @@ export async function fetchDailyRanking(date: string, limit = 20): Promise<Daily
     .order("duration_ms", { ascending: true })
     .limit(limit);
   if (error) throw error;
-  return (data ?? []) as DailyRankRow[];
+  return byRankingTime((data ?? []) as DailyRankRow[]);
 }
 
 export async function fetchSizeRanking(size: Size, limit = 10): Promise<SizeRankRow[]> {
@@ -228,7 +239,7 @@ export async function fetchLeagueDaily(leagueId: string, date: string): Promise<
     .eq("daily_date", date)
     .order("duration_ms", { ascending: true });
   if (error) throw error;
-  return (data ?? []) as DailyRankRow[];
+  return byRankingTime((data ?? []) as DailyRankRow[]);
 }
 
 // ------------------------------------------------------------- temporada

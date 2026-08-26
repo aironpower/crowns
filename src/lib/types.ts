@@ -61,6 +61,8 @@ export interface DailyRankRow {
   size: Size;
   duration_ms: number;
   hints: number;
+  /** Tiempo de clasificación (con la penalización de las pistas). Migración 0006. */
+  adjusted_ms?: number;
   created_at: string;
   user_id: string;
   username: string;

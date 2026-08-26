@@ -188,6 +188,9 @@ export const en: Dict = {
   "league.tabToday": "Today",
   "league.tabMonth": "Month",
 
+  "rank.penalty": "Each hint adds 30 s to the ranking time.",
+  "rank.realTime": "Real time {time}, plus {count} hint(s)",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };

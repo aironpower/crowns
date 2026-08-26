@@ -188,6 +188,9 @@ export const ca: Dict = {
   "league.tabToday": "Avui",
   "league.tabMonth": "Mes",
 
+  "rank.penalty": "Cada pista suma 30 s al temps de classificació.",
+  "rank.realTime": "Temps real {time}, més {count} pista/es",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

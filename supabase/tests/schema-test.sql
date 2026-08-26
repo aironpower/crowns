@@ -10,6 +10,8 @@
 \set solution_b '{3,1,7,5,2,6,4,0}'
 \set regions_c '{0,0,1,1,2,2,2,2,0,0,3,3,3,4,4,2,0,3,3,5,3,4,4,4,0,0,3,5,6,4,4,4,0,5,5,5,6,4,4,4,0,0,0,6,6,6,4,4,7,0,6,6,6,4,4,6,7,0,6,6,6,6,6,6}'
 \set solution_c '{2,7,4,1,3,6,0,5}'
+\set regions_d '{0,0,0,0,1,2,2,2,0,0,0,1,1,1,3,4,5,5,0,1,3,3,3,4,6,0,0,1,3,3,3,4,6,0,1,1,1,3,3,3,6,0,1,7,3,3,7,3,6,6,1,7,7,7,7,3,1,1,1,1,7,7,7,7}'
+\set solution_d '{6,2,0,7,3,5,1,4}'
 -- Stub de lo que aporta Supabase (esquema auth, roles y auth.uid()).
 create schema if not exists auth;
 create table auth.users (
@@ -31,6 +33,7 @@ end $$;
 \i /work/migrations/0003_verified_times.sql
 \i /work/migrations/0004_leagues.sql
 \i /work/migrations/0005_seasons.sql
+\i /work/migrations/0006_hint_penalty.sql
 
 \echo '--- 1. trigger de perfil al registrarse ---'
 insert into auth.users (id, email, raw_user_meta_data)
@@ -303,3 +306,26 @@ select count(*) as filas_liga_para_miembro from public.league_monthly_leaderboar
 select set_config('app.user_id', '44444444-4444-4444-4444-444444444444', false);
 select count(*) as filas_liga_para_extrano from public.league_monthly_leaderboard;
 reset role;
+
+\echo '--- 16. las pistas penalizan ---'
+-- Mismo tablero, dos jugadores: uno tarda menos pero usa dos pistas.
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select (public.submit_play(8, :'regions_d', :'solution_d', 40000, 2, 0, 'daily', date '2026-04-01')).hints as con_pistas;
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select (public.submit_play(8, :'regions_d', :'solution_d', 70000, 0, 0, 'daily', date '2026-04-01')).hints as sin_pistas;
+
+\echo '  40 s con dos pistas = 1:40 ajustado, así que gana el de 70 s limpio'
+select p.username, dp.duration_ms, dp.hints, dp.adjusted_ms, dp.position, dp.points
+  from public.daily_points dp join public.profiles p on p.id = dp.user_id
+ where dp.daily_date = date '2026-04-01' order by dp.position;
+
+\echo '  el ranking del día ordena igual'
+select username, duration_ms, hints, adjusted_ms from public.daily_leaderboard
+ where daily_date = date '2026-04-01' order by adjusted_ms;
+
+\echo '  y el puesto propio usa el tiempo ajustado'
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select * from public.board_standing('8:' || array_to_string(:'regions_d'::smallint[], ''));
+
+\echo '  la penalización está en un solo sitio'
+select public.hint_penalty_ms() as penalizacion_ms;

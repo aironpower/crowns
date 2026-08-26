@@ -4,6 +4,14 @@
 -- Un grupo cerrado con su propio ranking del puzle del día. Se entra con un
 -- código corto, como el enlace de un tablero.
 
+-- Comprobación de orden: sin la migración anterior, el error que sale es
+-- confuso ("relation does not exist" en mitad del archivo).
+do $$ begin
+  if to_regclass('public.profiles') is null then
+    raise exception 'Falta 0001_init.sql: aplícala antes que esta.';
+  end if;
+end $$;
+
 create table if not exists public.leagues (
   id         uuid primary key default gen_random_uuid(),
   name       text not null check (char_length(trim(name)) between 2 and 40),

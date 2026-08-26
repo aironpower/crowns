@@ -8,9 +8,22 @@
 --   2. board_standing(): en qué puesto has quedado en un tablero y a cuánto
 --      estás del mejor tiempo.
 
+-- Comprobación de orden: la clasificación por liga lee de league_members, que
+-- crea la migración anterior. Sin ella el error sale en mitad del archivo y no
+-- se entiende ("relation public.league_members does not exist").
+do $$ begin
+  if to_regclass('public.plays') is null then
+    raise exception 'Falta 0001_init.sql: aplícala antes que esta.';
+  end if;
+  if to_regclass('public.league_members') is null then
+    raise exception 'Falta 0004_leagues.sql: aplícala antes que esta.';
+  end if;
+end $$;
+
 -- ----------------------------------------------- puntos del puzle del día
 -- 1.º 10 puntos, 2.º 8, 3.º 6, 4.º 5, 5.º 4, 6.º 3, 7.º 2 y 1 punto por
 -- terminar. Los empates comparten puesto (rank), como en cualquier carrera.
+
 create or replace view public.daily_points with (security_invoker = true) as
   select pz.daily_date,
          pl.user_id,

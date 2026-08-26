@@ -6,7 +6,7 @@ import { BoardPreview } from "../../components/Board";
 import { SkeletonList } from "../../components/Skeleton";
 import { boardFromFingerprint } from "../../game/generator";
 import { useAuth } from "../auth/AuthProvider";
-import { fetchActivity, fetchDailyRanking, fetchMonthly, fetchSizeRanking, monthKey } from "../../lib/api";
+import { fetchActivity, fetchDailyRanking, fetchMonthly, fetchSizeRanking, monthKey, rankingTime } from "../../lib/api";
 import type { ActivityRow, DailyRankRow, MonthRankRow, SizeRankRow } from "../../lib/types";
 import { SIZES, type Size } from "../../game/types";
 import { todayKey } from "../../game/rng";
@@ -145,7 +145,11 @@ export function CommunityPage() {
       </section>
 
       <section className="panel stack">
-        <h2>{t("community.dailyRanking")}</h2>
+        <div className="row wrap">
+          <h2>{t("community.dailyRanking")}</h2>
+          <div className="grow" />
+          <span className="muted small">{t("rank.penalty")}</span>
+        </div>
         {loading ? (
           <SkeletonList rows={3} thumb={false} />
         ) : daily.length === 0 ? (
@@ -168,7 +172,17 @@ export function CommunityPage() {
                       <span className={`rank${index < 3 ? ` top${index + 1}` : ""}`}>{index + 1}</span>
                     </td>
                     <td>{name(row)}</td>
-                    <td className="numeric">{formatTime(row.duration_ms)}</td>
+                    <td
+                      className="numeric"
+                      title={
+                        row.hints
+                          ? t("rank.realTime", { time: formatTime(row.duration_ms), count: row.hints })
+                          : undefined
+                      }
+                    >
+                      {formatTime(rankingTime(row))}
+                      {row.hints ? <span className="muted"> *</span> : null}
+                    </td>
                     <td className="numeric">{row.hints}</td>
                   </tr>
                 ))}

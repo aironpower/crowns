@@ -12,6 +12,7 @@ import {
   joinLeague,
   leaveLeague,
   monthKey,
+  rankingTime,
 } from "../../lib/api";
 import type { DailyRankRow, League, MonthRankRow } from "../../lib/types";
 
@@ -242,7 +243,17 @@ export function Leagues({ today }: { today: string }) {
                           <span className={`rank${index < 3 ? ` top${index + 1}` : ""}`}>{index + 1}</span>
                         </td>
                         <td>{row.display_name?.trim() || row.username}</td>
-                        <td className="numeric">{formatTime(row.duration_ms)}</td>
+                        <td
+                          className="numeric"
+                          title={
+                            row.hints
+                              ? t("rank.realTime", { time: formatTime(row.duration_ms), count: row.hints })
+                              : undefined
+                          }
+                        >
+                          {formatTime(rankingTime(row))}
+                          {row.hints ? <span className="muted"> *</span> : null}
+                        </td>
                         <td className="numeric">{row.hints}</td>
                       </tr>
                     ))}
