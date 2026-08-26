@@ -70,6 +70,25 @@ a la app y la sesión no llega a crearse.
 Vuelve a ejecutar `npm run check`: los proveedores deben salir con ✓ y los botones
 aparecerán solos en la pantalla de acceso.
 
+### Por qué Google enseña el dominio de Supabase
+
+En la pantalla de Google aparece «Ir a `<proyecto>.supabase.co`» en vez de
+`crowns.softie.dev`. No es un error de configuración: Google muestra el dominio del
+`redirect_uri`, y el intercambio del código ocurre en el servidor de Supabase.
+
+Hay dos formas de cambiarlo, ninguna imprescindible:
+
+1. **Dominio propio en Supabase** (complemento de pago, por proyecto): usar
+   `auth.softie.dev` como dominio de autenticación. No toca el código, y de paso
+   quita `supabase.co` de los correos de confirmación y de los enlaces mágicos.
+2. **Google Identity Services** (gratis): pedir el *ID token* desde la propia web con
+   `signInWithIdToken`, de modo que el consentimiento sale a nombre de
+   `crowns.softie.dev`. Obliga a cargar el script de Google en la pantalla de acceso,
+   a usar su botón, a añadir el origen en Google Cloud y el *Client ID* en Supabase.
+
+Decisión actual: **dejarlo como está**. Funciona correctamente y solo afecta a lo que
+se lee en la pantalla de consentimiento.
+
 ## Textos legales
 
 La política de privacidad y las condiciones del servicio están en el propio juego,
