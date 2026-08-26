@@ -77,6 +77,15 @@ export interface SizeRankRow {
   last_played: string;
 }
 
+export interface League {
+  id: string;
+  name: string;
+  code: string;
+  owner_id: string;
+  created_at: string;
+  members: number;
+}
+
 export interface PlayerStats {
   user_id: string;
   username: string;

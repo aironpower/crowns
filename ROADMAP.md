@@ -9,17 +9,9 @@ concreto; los rankings globales solo tienen sentido cuando hay volumen.
 - **Tarjeta de resultado** para pegar en un chat, con el enlace al mismo tablero.
 - **Duelo en el tablero compartido**: al resolver se ve quién más lo ha jugado y en cuánto.
 - **Tiempo medido por el servidor** (`start_attempt` + `submit_play`), con las partidas marcadas como verificadas.
+- **Ligas privadas**: grupos cerrados con código de seis caracteres y ranking propio del puzle del día.
 
-## Siguiente, cuando haya gente (10-20 jugadores)
-
-### Ligas privadas — esfuerzo medio
-
-Un código de invitación y el ranking diario filtrado por grupo. Es lo que de
-verdad engancha: compites con los tuyos, no con desconocidos.
-
-Encaja con lo que ya hay: dos tablas (`leagues`, `league_members`) con RLS del
-mismo estilo que `profiles`, y un filtro en `daily_leaderboard`. La invitación
-puede ser un código corto en la URL, como el `?board=` de ahora.
+## Siguiente
 
 ### Temporadas mensuales — esfuerzo bajo
 
@@ -62,8 +54,10 @@ Lo que sigue abierto:
   migración `0003` y las que sube un invitado no lo están. Cuando todo lo nuevo
   venga verificado, conviene filtrar los rankings por `verified` o marcarlas de
   otro color.
-- **Sin límite de peticiones.** Nada impide abrir cien intentos seguidos. Si
-  llega a molestar, un límite por jugador y minuto en la propia función.
+- **Sin límite de peticiones.** Nada impide abrir cien intentos seguidos, ni
+  probar códigos de liga al azar. Si llega a molestar, un límite por jugador y
+  minuto en las propias funciones. Con seis caracteres sin vocales hay unos
+  1.100 millones de combinaciones, así que adivinar un código no es el problema.
 
 Mi criterio: mientras no haya nada en juego, no merece la pena ir más lejos. La
 defensa real de un juego pequeño es que hacer trampas no dé nada, no que sea

@@ -162,6 +162,21 @@ export const fr: Dict = {
   "duel.verified": "Temps mesuré par le serveur",
   "duel.you": "toi",
 
+  "league.title": "Tes ligues",
+  "league.subtitle": "Un groupe fermé avec son propre classement du jour.",
+  "league.create": "Créer une ligue",
+  "league.join": "Rejoindre",
+  "league.name": "Nom de la ligue",
+  "league.code": "Code",
+  "league.members": "{count} joueur(s)",
+  "league.leave": "Quitter la ligue",
+  "league.empty": "Tu n'es dans aucune ligue. Crée-en une et fais tourner le code.",
+  "league.signIn": "Connecte-toi pour créer une ligue ou en rejoindre une.",
+  "league.notFound": "Aucune ligue avec ce code.",
+  "league.copied": "Code copié",
+  "league.ranking": "Classement du jour dans {name}",
+  "league.noPlays": "Personne de la ligue n'a encore résolu le puzzle du jour.",
+
   "theme.toggle": "Changer de thème",
   "lang.label": "Langue",
 };

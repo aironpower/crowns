@@ -11,6 +11,7 @@ import type { ActivityRow, DailyRankRow, SizeRankRow } from "../../lib/types";
 import { SIZES, type Size } from "../../game/types";
 import { todayKey } from "../../game/rng";
 import { supabase } from "../../lib/supabase";
+import { Leagues } from "./Leagues";
 
 export function CommunityPage() {
   const { t, timeAgo } = useI18n();
@@ -87,6 +88,8 @@ export function CommunityPage() {
 
   return (
     <div className="stack">
+      <Leagues today={today} />
+
       <section className="panel stack">
         <h1>{t("community.title")}</h1>
         {error ? <p className="error">{error}</p> : null}

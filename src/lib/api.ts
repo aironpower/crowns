@@ -1,7 +1,7 @@
 import type { Locale } from "../i18n";
 import type { Puzzle, PuzzleMode, Size } from "../game/types";
 import { db } from "./supabase";
-import type { ActivityRow, BoardRankRow, DailyRankRow, PlayRow, PlayerStats, Profile, SizeRankRow } from "./types";
+import type { ActivityRow, BoardRankRow, DailyRankRow, League, PlayRow, PlayerStats, Profile, SizeRankRow } from "./types";
 
 export interface SubmitPlayInput {
   puzzle: Puzzle;
@@ -187,4 +187,46 @@ export async function hasPlayedDaily(userId: string, date: string): Promise<bool
     .eq("daily_date", date);
   if (error) throw error;
   return (count ?? 0) > 0;
+}
+
+// ------------------------------------------------------------------ ligas
+
+/** Las ligas del jugador. Las políticas RLS ya filtran: solo salen las suyas. */
+export async function fetchMyLeagues(): Promise<League[]> {
+  const { data, error } = await db().from("my_leagues").select("*").order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as League[];
+}
+
+export async function createLeague(name: string): Promise<League> {
+  const { data, error } = await db().rpc("create_league", { p_name: name });
+  if (error) throw error;
+  return data as League;
+}
+
+export async function joinLeague(code: string): Promise<League> {
+  const { data, error } = await db().rpc("join_league", { p_code: code.trim().toUpperCase() });
+  if (error) throw error;
+  return data as League;
+}
+
+export async function leaveLeague(leagueId: string, userId: string): Promise<void> {
+  const { error } = await db()
+    .from("league_members")
+    .delete()
+    .eq("league_id", leagueId)
+    .eq("user_id", userId);
+  if (error) throw error;
+}
+
+/** Ranking del puzle del día dentro de una liga. */
+export async function fetchLeagueDaily(leagueId: string, date: string): Promise<DailyRankRow[]> {
+  const { data, error } = await db()
+    .from("league_daily_leaderboard")
+    .select("*")
+    .eq("league_id", leagueId)
+    .eq("daily_date", date)
+    .order("duration_ms", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as DailyRankRow[];
 }

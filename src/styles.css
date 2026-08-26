@@ -1145,6 +1145,77 @@ details.panel summary {
   font-size: 14px;
 }
 
+/* --------------------------------------------------------------- ligas */
+.league-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.league-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 4px 6px 4px 4px;
+}
+.league-list li.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.league-pick {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  background: none;
+  border: 0;
+  padding: 6px 8px;
+  font: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.league-list .code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  background: var(--panel-soft);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 5px 9px;
+  color: var(--muted);
+  cursor: copy;
+}
+.league-list .code:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.league-forms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.league-forms input {
+  min-width: 0;
+  flex: 1;
+}
+.league-ranking-title {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 0;
+}
+@media (max-width: 560px) {
+  .league-forms {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ----------------------------------------------------------------- auth */
 .auth {
   max-width: 430px;

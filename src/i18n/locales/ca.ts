@@ -162,6 +162,21 @@ export const ca: Dict = {
   "duel.verified": "Temps mesurat pel servidor",
   "duel.you": "tu",
 
+  "league.title": "Les teves lligues",
+  "league.subtitle": "Un grup tancat amb el seu propi rànquing diari.",
+  "league.create": "Crear lliga",
+  "league.join": "Unir-s'hi",
+  "league.name": "Nom de la lliga",
+  "league.code": "Codi",
+  "league.members": "{count} jugador/s",
+  "league.leave": "Sortir de la lliga",
+  "league.empty": "Encara no ets a cap lliga. Crea'n una i passa el codi a qui vulguis.",
+  "league.signIn": "Entra amb el teu compte per crear lligues o unir-t'hi.",
+  "league.notFound": "No hi ha cap lliga amb aquest codi.",
+  "league.copied": "Codi copiat",
+  "league.ranking": "Rànquing d'avui a {name}",
+  "league.noPlays": "Ningú de la lliga ha resolt el puzle d'avui encara.",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

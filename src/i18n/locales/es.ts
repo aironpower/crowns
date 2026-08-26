@@ -160,6 +160,21 @@ export const es = {
   "duel.verified": "Tiempo medido por el servidor",
   "duel.you": "tú",
 
+  "league.title": "Tus ligas",
+  "league.subtitle": "Un grupo cerrado con su propio ranking del puzle del día.",
+  "league.create": "Crear liga",
+  "league.join": "Unirse",
+  "league.name": "Nombre de la liga",
+  "league.code": "Código",
+  "league.members": "{count} jugador(es)",
+  "league.leave": "Salir de la liga",
+  "league.empty": "Todavía no estás en ninguna liga. Crea una y pasa el código a quien quieras.",
+  "league.signIn": "Entra con tu cuenta para crear ligas o unirte a una.",
+  "league.notFound": "No hay ninguna liga con ese código.",
+  "league.copied": "Código copiado",
+  "league.ranking": "Ranking de hoy en {name}",
+  "league.noPlays": "Nadie de la liga ha resuelto el puzle de hoy todavía.",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };

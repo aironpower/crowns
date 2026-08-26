@@ -162,6 +162,21 @@ export const en: Dict = {
   "duel.verified": "Time measured by the server",
   "duel.you": "you",
 
+  "league.title": "Your leagues",
+  "league.subtitle": "A closed group with its own daily ranking.",
+  "league.create": "Create league",
+  "league.join": "Join",
+  "league.name": "League name",
+  "league.code": "Code",
+  "league.members": "{count} player(s)",
+  "league.leave": "Leave league",
+  "league.empty": "You are not in any league yet. Create one and pass the code around.",
+  "league.signIn": "Sign in to create a league or join one.",
+  "league.notFound": "No league with that code.",
+  "league.copied": "Code copied",
+  "league.ranking": "Today's ranking in {name}",
+  "league.noPlays": "Nobody in the league has solved today's puzzle yet.",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };

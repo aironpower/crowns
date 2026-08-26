@@ -25,6 +25,7 @@ end $$;
 \i /work/migrations/0001_init.sql
 \i /work/migrations/0002_player_settings.sql
 \i /work/migrations/0003_verified_times.sql
+\i /work/migrations/0004_leagues.sql
 
 \echo '--- 1. trigger de perfil al registrarse ---'
 insert into auth.users (id, email, raw_user_meta_data)
@@ -182,3 +183,71 @@ set role authenticated;
 select count(*) as intentos_visibles_para_un_usuario from public.attempts;
 reset role;
 select count(*) as intentos_reales from public.attempts;
+
+\echo '--- 14. ligas privadas ---'
+create or replace function pg_temp.intentar(p_sql text) returns text language plpgsql as $fn$
+begin
+  execute p_sql;
+  return 'OK';
+exception when others then return 'RECHAZADO (' || sqlerrm || ')';
+end $fn$;
+
+-- Supabase concede estos permisos por defecto a anon/authenticated; aquí hay
+-- que darlos a mano para que RLS sea lo único que decide.
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on public.leagues, public.league_members to authenticated;
+
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select (public.create_league('Los del jueves')).name as liga_creada;
+select code as codigo, id as liga_id from public.leagues limit 1 \gset
+
+\echo '  el código tiene 6 caracteres y sin vocales'
+select code, code ~ '^[A-Z0-9]{6}$' as formato_ok, code !~ '[AEIOU]' as sin_vocales from public.leagues;
+
+\echo '  el creador queda dentro y ve su liga'
+set role authenticated;
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select name, members from public.my_leagues;
+reset role;
+
+\echo '  otro jugador no la ve hasta unirse'
+set role authenticated;
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select count(*) as ligas_visibles_antes from public.my_leagues;
+reset role;
+
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select (public.join_league(:'codigo')).name as se_une;
+set role authenticated;
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select count(*) as ligas_visibles_despues from public.my_leagues;
+select name, members from public.my_leagues;
+reset role;
+
+\echo '  un código inventado no cuela'
+select set_config('app.user_id', '33333333-3333-3333-3333-333333333333', false);
+select pg_temp.intentar('select public.join_league(''XXXXXX'')') as codigo_falso;
+
+\echo '  nadie puede apuntarse a mano ni meter a otro'
+set role authenticated;
+select set_config('app.user_id', '33333333-3333-3333-3333-333333333333', false);
+-- con el id literal: si no, RLS ya oculta la liga y el insert no toca ninguna
+-- fila, que parece un permiso concedido sin serlo
+select pg_temp.intentar('insert into public.league_members (league_id, user_id) values (''' || :'liga_id' || ''', ''33333333-3333-3333-3333-333333333333'')') as apuntarse_a_mano;
+select pg_temp.intentar('insert into public.leagues (name, code, owner_id) values (''Pirata'', ''ZZZZZZ'', ''33333333-3333-3333-3333-333333333333'')') as crear_a_mano;
+reset role;
+
+\echo '  el ranking de la liga solo lo ven sus miembros'
+set role authenticated;
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select count(*) as filas_para_un_miembro from public.league_daily_leaderboard;
+select set_config('app.user_id', '33333333-3333-3333-3333-333333333333', false);
+select count(*) as filas_para_un_extrano from public.league_daily_leaderboard;
+reset role;
+
+\echo '  salirse sí se puede'
+set role authenticated;
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select pg_temp.intentar('delete from public.league_members where user_id = ''22222222-2222-2222-2222-222222222222''') as salirse;
+select count(*) as ligas_tras_salir from public.my_leagues;
+reset role;
