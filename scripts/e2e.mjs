@@ -313,6 +313,10 @@ const SCRIPT = `(async () => {
   ok(!!autor, "el pie enlaza a softie.dev");
   ok(/Softie Development/i.test(autor?.textContent ?? ""), "y lo firma Softie Development");
 
+  const donar = $(".donate-link");
+  ok(!!donar, "el pie ofrece donar");
+  ok(!!donar && donar.href.includes("github.com/sponsors/"), "y apunta a GitHub Sponsors: " + (donar?.getAttribute("href") ?? ""));
+
   // cambio de idioma: icono de la bola del mundo (sin sesión)
   ok($$("header select").length === 0, "la cabecera ya no lleva el desplegable de idioma");
   const globo = $(".language-menu .icon-button");

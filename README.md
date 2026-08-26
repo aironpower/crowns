@@ -95,11 +95,10 @@ El pie lleva la firma «Hecho por Softie Development» con enlace a softie.dev, 
 debajo un enlace discreto de donación. Los dos salen de
 [`src/config/site.ts`](src/config/site.ts).
 
-**El bloque de donación solo aparece si `donateUrl` tiene valor**, así que ahora
-mismo está oculto. GitHub Sponsors admite organizaciones, pero hay que solicitarlo
-y esperar aprobación: hasta entonces `github.com/sponsors/Softie-Development`
-redirige al perfil de la organización. Cuando esté aprobado, pon esa URL en
-`donateUrl` y el enlace aparece solo.
+Las donaciones van por **GitHub Sponsors de la organización**
+(`github.com/sponsors/Softie-Development`), con importe libre, puntual o mensual.
+El bloque solo se muestra si `donateUrl` tiene valor: dejándola vacía desaparece
+del pie sin tocar nada más.
 
 ## Textos legales
 

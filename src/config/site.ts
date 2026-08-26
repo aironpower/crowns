@@ -5,14 +5,10 @@ export const SITE = {
   authorUrl: "https://softie.dev",
 
   /**
-   * Página de donaciones. Mientras esté vacía, el bloque no se muestra.
-   *
-   * GitHub Sponsors admite organizaciones, pero hay que solicitarlo y esperar
-   * aprobación: hasta entonces github.com/sponsors/Softie-Development redirige
-   * al perfil de la organización. En cuanto esté aprobado, pon aquí:
-   *   "https://github.com/sponsors/Softie-Development"
+   * Página de donaciones. Si se deja vacía, el bloque del pie no se muestra.
+   * Admite importe libre, puntual o mensual.
    */
-  donateUrl: "",
+  donateUrl: "https://github.com/sponsors/Softie-Development",
 };
 
 export const donationsEnabled = (): boolean => SITE.donateUrl.trim().length > 0;
