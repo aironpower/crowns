@@ -81,6 +81,25 @@ a la app y la sesión no llega a crearse.
 Vuelve a ejecutar `npm run check`: los proveedores deben salir con ✓ y los botones
 aparecerán solos en la pantalla de acceso.
 
+### Una cuenta por correo, aunque entres por sitios distintos
+
+Supabase **une automáticamente** los accesos que comparten un correo verificado:
+si tu cuenta de GitHub usa el mismo correo con el que te registraste, entrar con
+GitHub te devuelve a esa misma cuenta, con su nombre de jugador y su historial.
+No se puede desactivar, y es lo razonable: si no, cada proveedor crearía un
+jugador distinto para la misma persona.
+
+Por eso el perfil enseña las **formas de entrar** que tiene tu cuenta.
+
+Dos detalles de los proveedores:
+
+- **GitHub no tiene selector de cuenta.** Usa siempre la sesión abierta en
+  github.com, así que si ya estabas dentro entra directo, sin preguntar. Para
+  usar otra cuenta: ventana privada, cerrar sesión en GitHub, o revocar la
+  aplicación en *GitHub → Settings → Applications*.
+- **Google sí lo tiene**, y la aplicación lo fuerza con `prompt=select_account`
+  para que siempre puedas elegir con cuál entras.
+
 ### Por qué Google enseña el dominio de Supabase
 
 En la pantalla de Google aparece «Ir a `<proyecto>.supabase.co`» en vez de

@@ -106,7 +106,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signInWithOAuth: async (provider) => {
         const { error } = await supabase!.auth.signInWithOAuth({
           provider,
-          options: { redirectTo: window.location.origin },
+          options: {
+            redirectTo: window.location.origin,
+            // Google sí sabe enseñar un selector de cuenta; GitHub no tiene
+            // equivalente: usa siempre la sesión abierta en github.com.
+            queryParams: provider === "google" ? { prompt: "select_account" } : undefined,
+          },
         });
         if (error) throw error;
       },

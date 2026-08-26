@@ -199,6 +199,10 @@ export const fr: Dict = {
   "live.finished": "Terminé !",
   "live.hint": "Partage le lien : celui qui l'ouvre joue la même grille et vous verrez vos progressions.",
 
+  "profile.identities": "Façons de se connecter",
+  "profile.identityNote": "Toutes mènent au même compte : Supabase fusionne les accès qui partagent un e-mail vérifié.",
+  "profile.email": "E-mail",
+
   "theme.toggle": "Changer de thème",
   "lang.label": "Langue",
 };

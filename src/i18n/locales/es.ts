@@ -197,6 +197,10 @@ export const es = {
   "live.finished": "¡Ha terminado!",
   "live.hint": "Comparte el enlace: quien lo abra juega este mismo tablero y os veréis avanzar.",
 
+  "profile.identities": "Formas de entrar",
+  "profile.identityNote": "Todas llevan a esta misma cuenta: Supabase une los accesos que comparten correo verificado.",
+  "profile.email": "Correo",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };

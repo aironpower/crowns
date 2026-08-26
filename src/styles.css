@@ -1136,6 +1136,15 @@ tr.me td:last-child {
   }
 }
 
+.identities {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 .tiles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(94px, 1fr));

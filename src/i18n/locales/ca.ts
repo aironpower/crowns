@@ -199,6 +199,10 @@ export const ca: Dict = {
   "live.finished": "Ha acabat!",
   "live.hint": "Comparteix l'enllaç: qui l'obri juga aquest mateix tauler i us veureu avançar.",
 
+  "profile.identities": "Maneres d'entrar",
+  "profile.identityNote": "Totes porten al mateix compte: Supabase uneix els accessos que comparteixen correu verificat.",
+  "profile.email": "Correu",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

@@ -199,6 +199,10 @@ export const pt: Dict = {
   "live.finished": "Terminou!",
   "live.hint": "Partilha o link: quem o abrir joga este mesmo tabuleiro e verão o progresso um do outro.",
 
+  "profile.identities": "Formas de entrar",
+  "profile.identityNote": "Todas levam à mesma conta: o Supabase junta os acessos que partilham email verificado.",
+  "profile.email": "Email",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

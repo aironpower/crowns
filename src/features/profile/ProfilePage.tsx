@@ -11,6 +11,13 @@ import { fetchMyBestBySize, fetchMyPlays, fetchPlayerStats, updateProfile } from
 import type { PlayRow, PlayerStats, SizeRankRow } from "../../lib/types";
 import { localPlays } from "../../lib/localStore";
 
+/** Nombres presentables de los proveedores. */
+const PROVIDER_NAMES: Record<string, string> = {
+  email: "Email",
+  github: "GitHub",
+  google: "Google",
+};
+
 function StatTile({ value, label }: { value: string | number; label: string }) {
   return (
     <div className="stat-tile">
@@ -257,6 +264,22 @@ export function ProfilePage() {
             })}
           </ul>
         )}
+      </section>
+
+      <section className="panel stack tight">
+        <div className="row wrap">
+          <h2>{t("profile.identities")}</h2>
+          <div className="grow" />
+          <span className="muted small">{user.email}</span>
+        </div>
+        <ul className="identities">
+          {(user.identities ?? []).map((identity) => (
+            <li key={identity.identity_id ?? identity.provider}>
+              <span className="pill accent">{PROVIDER_NAMES[identity.provider] ?? identity.provider}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="muted small">{t("profile.identityNote")}</p>
       </section>
 
       <details className="panel">

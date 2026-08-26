@@ -199,6 +199,10 @@ export const de: Dict = {
   "live.finished": "Fertig!",
   "live.hint": "Teil den Link: wer ihn öffnet, spielt dasselbe Feld und ihr seht euren Fortschritt.",
 
+  "profile.identities": "Anmeldewege",
+  "profile.identityNote": "Alle führen zum selben Konto: Supabase verbindet Anmeldungen mit derselben bestätigten E-Mail.",
+  "profile.email": "E-Mail",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };

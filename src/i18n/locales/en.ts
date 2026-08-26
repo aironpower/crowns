@@ -199,6 +199,10 @@ export const en: Dict = {
   "live.finished": "Finished!",
   "live.hint": "Share the link: whoever opens it plays this same board and you'll see each other's progress.",
 
+  "profile.identities": "Ways to sign in",
+  "profile.identityNote": "They all lead to this same account: Supabase merges sign-in methods that share a verified email.",
+  "profile.email": "Email",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };
