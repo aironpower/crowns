@@ -25,6 +25,8 @@ export function PlayPage() {
   const [record, setRecord] = useState(false);
   const [best, setBest] = useState<number | null>(null);
   const [dailyDone, setDailyDone] = useState(false);
+  /** Fecha del diario que hay en pantalla; se fija al cargarlo, no al enviarlo. */
+  const loadedDaily = useRef<string | null>(null);
   const [shared, setShared] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
   const [copyFailed, setCopyFailed] = useState(false);
@@ -45,7 +47,7 @@ export function PlayPage() {
             hints,
             moves,
             mode,
-            dailyDate: mode === "daily" ? today : null,
+            dailyDate: mode === "daily" ? loadedDaily.current : null,
           });
           setSaveState("saved");
           if (mode === "daily") setDailyDone(true);
@@ -64,12 +66,12 @@ export function PlayPage() {
         duration_ms: Math.round(durationMs),
         hints,
         moves,
-        daily_date: mode === "daily" ? today : null,
+        daily_date: mode === "daily" ? loadedDaily.current : null,
       });
       setSaveState("local");
       if (mode === "daily") setDailyDone(true);
     },
-    [user, configured, today],
+    [user, configured],
   );
 
   const settings = useSettings();
@@ -87,6 +89,7 @@ export function PlayPage() {
 
   const startPractice = useCallback(
     (nextSize: Size) => {
+      loadedDaily.current = null;
       resetFlags();
       setBest(bestTime(nextSize));
       void newGame(nextSize, "practice");
@@ -95,10 +98,14 @@ export function PlayPage() {
   );
 
   const startDaily = useCallback(() => {
+    // La fecha se toma al pulsar: si la pestaña llevaba abierta desde ayer, el
+    // botón sigue dando el puzle de hoy y no el del día anterior.
+    const date = todayKey();
+    loadedDaily.current = date;
     resetFlags();
     setBest(bestTime(DAILY_SIZE));
-    loadPuzzle(dailyFor(today, DAILY_SIZE), "daily");
-  }, [loadPuzzle, today]);
+    loadPuzzle(dailyFor(date, DAILY_SIZE), "daily");
+  }, [loadPuzzle]);
 
   // Primera carga: tablero compartido por URL, o partida libre.
   useEffect(() => {
@@ -109,6 +116,7 @@ export function PlayPage() {
     if (dayParam && /^\d{4}-\d{2}-\d{2}$/.test(dayParam)) {
       setSize(DAILY_SIZE);
       setBest(bestTime(DAILY_SIZE));
+      loadedDaily.current = dayParam === today ? dayParam : null;
       loadPuzzle(dailyFor(dayParam, DAILY_SIZE), dayParam === today ? "daily" : "practice");
       if (dayParam !== today) game.setMessage(t("game.archivedDaily", { date: dayParam }));
       return;
