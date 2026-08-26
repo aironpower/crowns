@@ -191,6 +191,14 @@ export const pt: Dict = {
   "rank.penalty": "Cada dica soma 30 s ao tempo de classificação.",
   "rank.realTime": "Tempo real {time}, mais {count} dica(s)",
 
+  "live.title": "Duelo em direto",
+  "live.invite": "Desafiar",
+  "live.waiting": "À espera que alguém entre…",
+  "live.copied": "Link do duelo copiado",
+  "live.you": "tu",
+  "live.finished": "Terminou!",
+  "live.hint": "Partilha o link: quem o abrir joga este mesmo tabuleiro e verão o progresso um do outro.",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

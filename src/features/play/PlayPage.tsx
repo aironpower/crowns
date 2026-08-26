@@ -16,13 +16,14 @@ import { buildShareCard } from "./shareCard";
 import { currentStreak } from "../../game/daily";
 import { localPlays } from "../../lib/localStore";
 import { useSettings } from "../../lib/useSettings";
+import { newDuelCode, useDuel } from "../../lib/useDuel";
 
 type SaveState = "idle" | "saving" | "saved" | "local" | "error";
 
 export function PlayPage() {
   const { t, formatDate } = useI18n();
-  const { user, configured } = useAuth();
-  const [params] = useSearchParams();
+  const { user, profile, configured } = useAuth();
+  const [params, setParams] = useSearchParams();
 
   const [size, setSize] = useState<Size>(8);
   const [saveState, setSaveState] = useState<SaveState>("idle");
@@ -35,6 +36,7 @@ export function PlayPage() {
   const [shareText, setShareText] = useState("");
   const [copyFailed, setCopyFailed] = useState(false);
   const [duel, setDuel] = useState<BoardRankRow[] | null>(null);
+  const [duelCopied, setDuelCopied] = useState(false);
   const [standing, setStanding] = useState<BoardStanding | null>(null);
   /** Intento abierto en el servidor para la partida en curso. */
   const attemptId = useRef<string | null>(null);
@@ -86,6 +88,7 @@ export function PlayPage() {
 
 
   const settings = useSettings();
+  const duelCode = params.get("duel");
   const game = useGame({
     onSolved: handleSolved,
     autoMark: settings.autoMark,
@@ -113,6 +116,15 @@ export function PlayPage() {
       alive = false;
     };
   }, [game.solved, game.puzzle, configured, saveState]);
+
+  const live = useDuel({
+    code: duelCode,
+    name: profile?.display_name?.trim() || profile?.username || t("nav.guest"),
+    crowns: game.crowns,
+    size: game.puzzle?.size ?? 8,
+    solved: game.solved,
+    durationMs: game.elapsedMs,
+  });
 
   const { loadPuzzle, newGame } = game;
   const started = useRef(false);
@@ -222,6 +234,24 @@ export function PlayPage() {
    * luego el portapapeles y, si el navegador lo bloquea, el enlace a la vista
    * y seleccionado para copiarlo a mano.
    */
+  /** Abre una sala de duelo en este tablero y copia el enlace. */
+  const inviteToDuel = async () => {
+    if (!game.puzzle) return;
+    const code = duelCode ?? newDuelCode();
+    const url = `${window.location.origin}${window.location.pathname}?board=${encodeURIComponent(
+      game.puzzle.fingerprint,
+    )}&duel=${code}`;
+    if (!duelCode) setParams({ board: game.puzzle.fingerprint, duel: code }, { replace: true });
+    try {
+      await navigator.clipboard.writeText(url);
+      setDuelCopied(true);
+      window.setTimeout(() => setDuelCopied(false), 2500);
+    } catch {
+      setShareText(url);
+      setCopyFailed(true);
+    }
+  };
+
   const share = async () => {
     if (!game.puzzle) return;
     const streak = currentStreak(
@@ -332,6 +362,40 @@ export function PlayPage() {
       {game.message ? <p className="note">{game.message}</p> : null}
       {game.mode === "daily" && dailyDone && !game.solved ? <p className="note">{t("game.dailyDone")}</p> : null}
 
+      {duelCode ? (
+        <section className="panel stack tight live">
+          <div className="row wrap">
+            <h2>🎯 {t("live.title")}</h2>
+            <div className="grow" />
+            <span className="pill">{duelCode}</span>
+          </div>
+          <ul className="live-list">
+            <li className="me">
+              <span className="live-name">{t("live.you")}</span>
+              <span className="live-bar">
+                <span style={{ width: `${(game.crowns / (game.puzzle?.size ?? 8)) * 100}%` }} />
+              </span>
+              <span className="live-count">
+                {game.solved ? formatTime(game.elapsedMs) : `${game.crowns}/${game.puzzle?.size ?? 8}`}
+              </span>
+            </li>
+            {live.rivals.map((rival) => (
+              <li key={rival.id} className={rival.done ? "done" : ""}>
+                <span className="live-name">{rival.name}</span>
+                <span className="live-bar">
+                  <span style={{ width: `${(rival.crowns / (rival.size || 8)) * 100}%` }} />
+                </span>
+                <span className="live-count">
+                  {rival.done && rival.ms ? formatTime(rival.ms) : `${rival.crowns}/${rival.size || 8}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {live.rivals.length === 0 ? <p className="muted small">{t("live.waiting")}</p> : null}
+          <p className="muted small">{t("live.hint")}</p>
+        </section>
+      ) : null}
+
       <div className="board-area">
         {game.loading || !game.puzzle ? (
           <div className="board-placeholder">{t("game.generating")}</div>
@@ -441,6 +505,11 @@ export function PlayPage() {
         >
           {t("game.new")}
         </button>
+        {configured ? (
+          <button type="button" className="button" onClick={() => void inviteToDuel()} disabled={game.loading}>
+            {duelCopied ? t("live.copied") : t("live.invite")}
+          </button>
+        ) : null}
         <div className="grow" />
         <div className="switches">
         <label className="toggle">

@@ -786,6 +786,58 @@ input:hover {
   padding: 8px 10px;
 }
 
+/* Duelo en directo: barras de progreso de cada jugador. */
+.live h2 {
+  font-size: 14px;
+}
+.live-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.live-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.live-name {
+  width: 92px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.live-list li.me .live-name {
+  color: var(--ink);
+  font-weight: 600;
+}
+.live-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+.live-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.25s ease;
+}
+.live-list li.done .live-bar span {
+  background: var(--ok);
+}
+.live-count {
+  width: 52px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Tu puesto en el tablero, encima del duelo. */
 .standing {
   margin: 12px 0 0 !important;

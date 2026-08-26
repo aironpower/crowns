@@ -17,20 +17,25 @@ concreto; los rankings globales solo tienen sentido cuando hay volumen.
   mediana es ruido; una penalización fija se entiende sin documentación. El
   tiempo real se sigue guardando y mostrando en el detalle.
 
+- **Duelo en tiempo real**: sala con código, mismo tablero y barras de progreso en directo.
+
+## Decidido que no
+
+- **Separar las partidas con ✕ automáticas.** Quien juega con las marcas
+  automáticas hace menos clics y va más rápido, pero está disponible para todos
+  y no es hacer trampa. Se quedan en la misma tabla.
+- **Normalizar por la mediana del día.** Con pocos jugadores la mediana es
+  ruido; en su lugar, cada pista suma 30 segundos.
+
 ## Siguiente
 
-### ¿Separar las partidas con ✕ automáticas? — sin decidir
+Nada urgente. Ideas si el juego crece:
 
-Quien juega con las marcas automáticas hace muchos menos clics, así que va más
-rápido. No es hacer trampa —está disponible para todos— pero mezcla dos formas
-de jugar en la misma tabla. Opciones: dejarlo así, marcar esas partidas en el
-ranking, o separarlas en dos clasificaciones. Con pocos jugadores, dejarlo.
-
-### Duelo en tiempo real — esfuerzo alto
-
-Mismo tablero, dos personas a la vez, viendo aparecer las coronas del rival.
-Supabase Realtime ya está en el proyecto para el muro de actividad, así que la
-pieza que falta son las salas y la sincronización.
+- **Notificación del puzle del día** (aviso del navegador o correo semanal).
+- **Historial del duelo**: hoy la sala es efímera y no queda registro de quién
+  ganó cada carrera.
+- **Más tamaños en el diario**, o un diario semanal más difícil.
+- **Reproducir una partida** jugada por otro, jugada a jugada.
 
 ## Sobre las trampas
 

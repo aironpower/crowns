@@ -191,6 +191,14 @@ export const en: Dict = {
   "rank.penalty": "Each hint adds 30 s to the ranking time.",
   "rank.realTime": "Real time {time}, plus {count} hint(s)",
 
+  "live.title": "Live duel",
+  "live.invite": "Challenge",
+  "live.waiting": "Waiting for someone to join…",
+  "live.copied": "Duel link copied",
+  "live.you": "you",
+  "live.finished": "Finished!",
+  "live.hint": "Share the link: whoever opens it plays this same board and you'll see each other's progress.",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };

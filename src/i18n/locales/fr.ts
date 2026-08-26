@@ -191,6 +191,14 @@ export const fr: Dict = {
   "rank.penalty": "Chaque indice ajoute 30 s au temps de classement.",
   "rank.realTime": "Temps réel {time}, plus {count} indice(s)",
 
+  "live.title": "Duel en direct",
+  "live.invite": "Défier",
+  "live.waiting": "En attente de quelqu'un…",
+  "live.copied": "Lien du duel copié",
+  "live.you": "toi",
+  "live.finished": "Terminé !",
+  "live.hint": "Partage le lien : celui qui l'ouvre joue la même grille et vous verrez vos progressions.",
+
   "theme.toggle": "Changer de thème",
   "lang.label": "Langue",
 };

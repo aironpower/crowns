@@ -177,7 +177,9 @@ baje de ΔE 20 (la peor medida sobre 2860 pares es 27,6).
 - **Temporadas**: `daily_points` reparte 10, 8, 6, 5, 4, 3, 2 puntos a los siete primeros de cada día y 1 al resto por terminar; `monthly_leaderboard` los suma por mes. Un mal día no hunde la temporada y presentarse a diario compensa. `board_standing(fingerprint)` devuelve el puesto de quien llama en un tablero, para poder decir «2.º de 37».
 - Vistas listas para consultar: `recent_activity`, `daily_leaderboard`, `leaderboard_by_size`, `player_stats`, `my_leagues`, `league_daily_leaderboard`, `daily_points`, `monthly_leaderboard` y `league_monthly_leaderboard`.
 
-Como cada tablero se identifica por su fingerprint, cualquier partida del historial o de la comunidad se puede volver a jugar: el enlace `?board=<fingerprint>` reconstruye el tablero y su solución. Eso convierte cada enlace compartido en un duelo: al resolver, el juego enseña **quién más ha jugado ese tablero y en cuánto tiempo**, y la tarjeta de resultado (estilo Wordle) lleva el enlace dentro para poder retar a alguien de un mensaje.
+Como cada tablero se identifica por su fingerprint, cualquier partida del historial o de la comunidad se puede volver a jugar: el enlace `?board=<fingerprint>` reconstruye el tablero y su solución.
+
+Añadiendo `&duel=<código>` se abre un **duelo en directo**: quien entre con ese enlace juega el mismo tablero y las barras de progreso se ven avanzar en tiempo real. Va por Supabase Realtime y no toca la base de datos: el progreso viaja por *broadcast* (instantáneo) y la presencia solo dice quién está en la sala. En las pruebas, repetir `track()` no propagaba el cambio, de ahí el reparto. Eso convierte cada enlace compartido en un duelo: al resolver, el juego enseña **quién más ha jugado ese tablero y en cuánto tiempo**, y la tarjeta de resultado (estilo Wordle) lleva el enlace dentro para poder retar a alguien de un mensaje.
 
 Las ideas que quedan por hacer —ligas privadas, temporadas, puntuación normalizada, duelo en tiempo real— están en [ROADMAP.md](ROADMAP.md), junto con lo que sigue abierto en materia de trampas.
 

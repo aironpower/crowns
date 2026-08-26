@@ -191,6 +191,14 @@ export const de: Dict = {
   "rank.penalty": "Jeder Tipp zählt 30 s auf die Wertungszeit.",
   "rank.realTime": "Echte Zeit {time}, plus {count} Tipp(s)",
 
+  "live.title": "Live-Duell",
+  "live.invite": "Herausfordern",
+  "live.waiting": "Warte, bis jemand dazukommt…",
+  "live.copied": "Duell-Link kopiert",
+  "live.you": "du",
+  "live.finished": "Fertig!",
+  "live.hint": "Teil den Link: wer ihn öffnet, spielt dasselbe Feld und ihr seht euren Fortschritt.",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };

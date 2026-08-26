@@ -300,6 +300,17 @@ const SCRIPT = `(async () => {
   window.dispatchEvent(new PopStateEvent("popstate"));
   await new Promise(r => setTimeout(r, 500));
 
+  // duelo en directo (con una sola pestaña: el panel y uno mismo)
+  history.pushState({}, "", "/?duel=E2ETEST");
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  await new Promise(r => setTimeout(r, 3500));
+  ok(!!$(".live-list"), "con ?duel= aparece el panel del duelo");
+  ok($$(".live-list li").length >= 1, "y te lista a ti mismo");
+  ok(/E2ETEST/.test($(".live")?.innerText ?? ""), "muestra el código de la sala");
+  history.pushState({}, "", "/");
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  await new Promise(r => setTimeout(r, 600));
+
   // páginas legales
   const legalLinks = $$(".legal-links a");
   ok(legalLinks.length === 2, "el pie enlaza privacidad y condiciones (" + legalLinks.length + ")");

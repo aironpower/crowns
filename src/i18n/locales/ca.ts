@@ -191,6 +191,14 @@ export const ca: Dict = {
   "rank.penalty": "Cada pista suma 30 s al temps de classificació.",
   "rank.realTime": "Temps real {time}, més {count} pista/es",
 
+  "live.title": "Duel en directe",
+  "live.invite": "Reptar",
+  "live.waiting": "Esperant que entri algú…",
+  "live.copied": "Enllaç del duel copiat",
+  "live.you": "tu",
+  "live.finished": "Ha acabat!",
+  "live.hint": "Comparteix l'enllaç: qui l'obri juga aquest mateix tauler i us veureu avançar.",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

@@ -189,6 +189,14 @@ export const es = {
   "rank.penalty": "Cada pista suma 30 s al tiempo de clasificación.",
   "rank.realTime": "Tiempo real {time}, más {count} pista(s)",
 
+  "live.title": "Duelo en directo",
+  "live.invite": "Retar",
+  "live.waiting": "Esperando a que entre alguien…",
+  "live.copied": "Enlace del duelo copiado",
+  "live.you": "tú",
+  "live.finished": "¡Ha terminado!",
+  "live.hint": "Comparte el enlace: quien lo abra juega este mismo tablero y os veréis avanzar.",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };
