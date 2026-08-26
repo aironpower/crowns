@@ -168,11 +168,19 @@ Ya está todo preparado en el repositorio:
 
    Luego, en *Settings → Pages → Custom domain*, escribe `crowns.softie.dev` y marca *Enforce HTTPS* cuando GitHub termine de emitir el certificado (unos minutos).
 
+   Ojo con `.dev`: es un TLD con **HSTS precargado**, así que los navegadores fuerzan HTTPS siempre. Hasta que el DNS apunte a GitHub y el certificado esté emitido, el dominio no abre en el navegador (por `http://` tampoco). Es normal, no es un fallo del despliegue.
+
 5. **Añade el dominio en Supabase**: *Authentication → URL Configuration* → *Site URL* `https://crowns.softie.dev` y añádelo también a *Redirect URLs*. Sin esto, el correo de confirmación y el magic link te devuelven a `localhost`.
 
 6. Si activas Google, añade `https://crowns.softie.dev` a los *orígenes autorizados de JavaScript* en Google Cloud. La URL de retorno sigue siendo la de Supabase, no cambia.
 
 Cada push a `main` vuelve a publicar. Para lanzarlo a mano: pestaña *Actions* → *Deploy* → *Run workflow*.
+
+Para probar el sitio publicado antes de que propague el DNS, la suite de navegador acepta banderas extra de Chrome:
+
+```bash
+CHROME_EXTRA_ARGS='--host-resolver-rules=MAP crowns.softie.dev 185.199.108.153'   node scripts/e2e.mjs http://crowns.softie.dev/
+```
 
 ### Otras opciones
 

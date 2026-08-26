@@ -39,6 +39,9 @@ const chrome = spawn(CHROME, [
   "--user-data-dir=" + process.env.TEMP + "\\crowns-smoke-profile",
   "--no-first-run",
   "--window-size=800,1100",
+  // CHROME_EXTRA_ARGS permite probar un despliegue antes de que propague el DNS:
+  //   CHROME_EXTRA_ARGS='--host-resolver-rules=MAP midominio 185.199.108.153'
+  ...(process.env.CHROME_EXTRA_ARGS ? process.env.CHROME_EXTRA_ARGS.split("|") : []),
   URL_APP,
 ]);
 
