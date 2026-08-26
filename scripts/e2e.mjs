@@ -248,6 +248,16 @@ const SCRIPT = `(async () => {
 
 try {
   await send("Runtime.enable");
+
+  // Con un sitio remoto la primera navegación tarda: hasta que no ha cargado, el
+  // documento sigue siendo about:blank y hasta localStorage está prohibido.
+  let ready = false;
+  for (let i = 0; i < 80 && !ready; i++) {
+    const href = await evaluate("location.href").catch(() => "");
+    ready = typeof href === "string" && href.startsWith(URL_APP.slice(0, URL_APP.indexOf("/", 8)));
+    if (!ready) await sleep(250);
+  }
+  if (!ready) throw new Error("la página no cargó: " + URL_APP);
   // el idioma se autodetecta del navegador; para la prueba lo fijamos en español
   await evaluate(`(async () => {
     localStorage.setItem("crowns.locale", JSON.stringify("es").slice(1, -1));
