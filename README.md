@@ -202,6 +202,29 @@ Añadiendo `&duel=<código>` se abre un **duelo en directo**: quien entre con es
 
 Las ideas que quedan por hacer —ligas privadas, temporadas, puntuación normalizada, duelo en tiempo real— están en [ROADMAP.md](ROADMAP.md), junto con lo que sigue abierto en materia de trampas.
 
+## Buscadores
+
+El juego es una aplicación de una sola página: lo que llega en el HTML inicial es
+un `<div>` vacío, que para un rastreador no dice nada. `npm run build` ejecuta
+después [`scripts/prerender.mjs`](scripts/prerender.mjs), que:
+
+- da a **cada ruta su propio `<title>`, descripción, canónica y Open Graph** (antes
+  todas compartían «Crowns»), y marca como `noindex` lo personal (perfil,
+  historial, acceso);
+- genera **dos páginas de contenido estáticas** con texto de verdad —
+  [/how-to-play/](https://crowns.softie.dev/how-to-play/) y
+  [/como-jugar/](https://crowns.softie.dev/como-jugar/) — enlazadas entre sí con
+  `hreflang`, que son las que pueden posicionar por *star battle*, *queens* o
+  *crowns game*;
+- añade datos estructurados (`VideoGame` y `FAQPage`);
+- escribe `robots.txt` y `sitemap.xml`.
+
+La imagen que sale al compartir el enlace se genera aparte con `npm run og`
+(necesita Chrome) y se guarda en `public/og-image.png`, para no depender del
+navegador en el servidor de despliegue.
+
+Los textos de esas páginas están en [`scripts/seo-pages.mjs`](scripts/seo-pages.mjs).
+
 ## Comandos
 
 ```bash
@@ -210,6 +233,7 @@ npm run build      # comprobación de tipos + build de producción
 npm test           # 13 pruebas del motor (reglas, unicidad, determinismo)
 npm run preview    # sirve el build en http://localhost:4173
 npm run check      # comprueba que Supabase responde y la migración está aplicada
+npm run og         # regenera public/og-image.png (necesita Chrome)
 npm run test:e2e   # prueba de humo en Chrome sobre el build servido
 npm run test:db    # aplica la migración a un Postgres en Docker y la verifica
 ```

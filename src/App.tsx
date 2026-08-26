@@ -48,6 +48,9 @@ export default function App() {
       <footer className="site-footer">
         <p>Crowns · {t("rules.unique")}</p>
         <p className="legal-links">
+          {/* enlace normal, no del router: la guía es una página estática */}
+          <a href={t("footer.howToUrl")}>{t("footer.howTo")}</a>
+          <span aria-hidden="true"> · </span>
           <Link to="/privacy">{t("legal.privacy")}</Link>
           <span aria-hidden="true"> · </span>
           <Link to="/terms">{t("legal.terms")}</Link>

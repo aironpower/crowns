@@ -203,6 +203,9 @@ export const pt: Dict = {
   "profile.identityNote": "Todas levam à mesma conta: o Supabase junta os acessos que partilham email verificado.",
   "profile.email": "Email",
 
+  "footer.howTo": "Como jogar",
+  "footer.howToUrl": "/como-jugar/",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

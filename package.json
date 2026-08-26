@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/spa-fallback.mjs",
+    "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
     "check": "node scripts/check-supabase.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -b --noEmit",
     "test:e2e": "node scripts/e2e.mjs",
-    "test:db": "node scripts/test-db.mjs"
+    "test:db": "node scripts/test-db.mjs",
+    "og": "node scripts/make-og-image.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",

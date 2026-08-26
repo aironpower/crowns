@@ -203,6 +203,9 @@ export const de: Dict = {
   "profile.identityNote": "Alle führen zum selben Konto: Supabase verbindet Anmeldungen mit derselben bestätigten E-Mail.",
   "profile.email": "E-Mail",
 
+  "footer.howTo": "Spielregeln",
+  "footer.howToUrl": "/how-to-play/",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };

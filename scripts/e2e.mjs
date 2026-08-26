@@ -313,8 +313,9 @@ const SCRIPT = `(async () => {
 
   // páginas legales
   const legalLinks = $$(".legal-links a");
-  ok(legalLinks.length === 2, "el pie enlaza privacidad y condiciones (" + legalLinks.length + ")");
-  legalLinks[0].click();
+  ok(legalLinks.length === 3, "el pie enlaza guía, privacidad y condiciones (" + legalLinks.length + ")");
+  ok(/how-to-play|como-jugar/.test(legalLinks[0].getAttribute("href") ?? ""), "y la guía es una página propia");
+  legalLinks.find(a => /privacidad|privacy/i.test(a.textContent)).click();
   await new Promise(r => setTimeout(r, 600));
   ok(location.pathname === "/privacy", "el enlace lleva a /privacy");
   const privacyText = $(".legal")?.innerText ?? "";

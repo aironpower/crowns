@@ -203,6 +203,9 @@ export const en: Dict = {
   "profile.identityNote": "They all lead to this same account: Supabase merges sign-in methods that share a verified email.",
   "profile.email": "Email",
 
+  "footer.howTo": "How to play",
+  "footer.howToUrl": "/how-to-play/",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };

@@ -203,6 +203,9 @@ export const ca: Dict = {
   "profile.identityNote": "Totes porten al mateix compte: Supabase uneix els accessos que comparteixen correu verificat.",
   "profile.email": "Correu",
 
+  "footer.howTo": "Com jugar",
+  "footer.howToUrl": "/como-jugar/",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

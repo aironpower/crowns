@@ -201,6 +201,9 @@ export const es = {
   "profile.identityNote": "Todas llevan a esta misma cuenta: Supabase une los accesos que comparten correo verificado.",
   "profile.email": "Correo",
 
+  "footer.howTo": "Cómo jugar",
+  "footer.howToUrl": "/como-jugar/",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };
