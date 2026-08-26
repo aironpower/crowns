@@ -1,0 +1,84 @@
+import type { Locale } from "../i18n";
+import type { PuzzleMode, Size } from "../game/types";
+
+export interface Profile {
+  id: string;
+  username: string;
+  display_name: string | null;
+  locale: Locale;
+  created_at: string;
+}
+
+export interface PlayRow {
+  id: string;
+  created_at: string;
+  duration_ms: number;
+  hints: number;
+  moves: number;
+  mode: PuzzleMode;
+  puzzle_id: string;
+  puzzles: { size: Size; fingerprint: string; daily_date: string | null } | null;
+}
+
+export interface ActivityRow {
+  id: string;
+  created_at: string;
+  duration_ms: number;
+  hints: number;
+  mode: PuzzleMode;
+  size: Size;
+  fingerprint: string;
+  daily_date: string | null;
+  user_id: string;
+  username: string;
+  display_name: string | null;
+}
+
+export interface DailyRankRow {
+  daily_date: string;
+  size: Size;
+  duration_ms: number;
+  hints: number;
+  created_at: string;
+  user_id: string;
+  username: string;
+  display_name: string | null;
+}
+
+export interface SizeRankRow {
+  size: Size;
+  user_id: string;
+  username: string;
+  display_name: string | null;
+  best_ms: number | null;
+  solved: number;
+  last_played: string;
+}
+
+export interface PlayerStats {
+  user_id: string;
+  username: string;
+  display_name: string | null;
+  joined_at: string;
+  solved: number;
+  dailies: number;
+  clean_solves: number;
+  best_ms: number | null;
+  avg_ms: number | null;
+  last_played: string | null;
+}
+
+/** Partida guardada en el navegador mientras se juega como invitado. */
+export interface LocalPlay {
+  id: string;
+  fingerprint: string;
+  size: Size;
+  regions: number[];
+  solution: number[];
+  mode: PuzzleMode;
+  duration_ms: number;
+  hints: number;
+  moves: number;
+  daily_date: string | null;
+  created_at: string;
+}
