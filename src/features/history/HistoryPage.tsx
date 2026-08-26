@@ -4,6 +4,7 @@ import { useI18n } from "../../i18n";
 import { formatTime } from "../../components/format";
 import { BoardPreview } from "../../components/Board";
 import { SkeletonList } from "../../components/Skeleton";
+import { DailyArchive, type SolvedEntry } from "./DailyArchive";
 import { boardFromFingerprint } from "../../game/generator";
 import { useAuth } from "../auth/AuthProvider";
 import { fetchMyPlays, submitPlay } from "../../lib/api";
@@ -40,7 +41,7 @@ export function HistoryPage() {
     }
     let alive = true;
     setLoading(true);
-    fetchMyPlays(user.id)
+    fetchMyPlays(user.id, 300)
       .then((rows) => alive && setRemote(rows))
       .catch(() => alive && setError(t("common.error")))
       .finally(() => alive && setLoading(false));
@@ -104,8 +105,20 @@ export function HistoryPage() {
     }
   };
 
+  // Mejor tiempo por tablero: sirve para marcar en el archivo los días resueltos.
+  const solvedByBoard = new Map<string, SolvedEntry>();
+  for (const entry of entries) {
+    if (!entry.fingerprint) continue;
+    const previous = solvedByBoard.get(entry.fingerprint);
+    if (!previous || entry.durationMs < previous.durationMs) {
+      solvedByBoard.set(entry.fingerprint, { durationMs: entry.durationMs, hints: entry.hints });
+    }
+  }
+
   return (
     <div className="stack">
+      <DailyArchive solvedByBoard={solvedByBoard} loading={loading} />
+
       <section className="panel stack">
         <h1>{t("history.title")}</h1>
 

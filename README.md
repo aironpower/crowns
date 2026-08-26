@@ -129,6 +129,8 @@ antes de darlos por buenos.
 
 Todo depende solo de un generador pseudoaleatorio con semilla y de contadores, nunca del reloj: **la misma semilla da siempre el mismo tablero**. De ahí sale el puzle diario, que se calcula en el cliente a partir de la fecha y sale idéntico para todos sin guardarlo en el servidor.
 
+Eso hace gratis el **archivo de puzles del día**: como cada fecha es una función pura, los tableros de las dos últimas semanas se reconstruyen en el navegador sin pedir nada al servidor. En *Historial* aparecen con su miniatura, cuáles has resuelto, en cuánto tiempo y la racha de días seguidos. Un día del archivo se abre con `?daily=AAAA-MM-DD`, y solo el de hoy cuenta como diario: los atrasados se juegan en modo libre para no colarse en la clasificación del día.
+
 Tiempos medios de generación (medidos con `npm test`): ~1 ms hasta 7×7, 10 ms en 8×8, 30 ms en 9×9 y ~250 ms en 10×10. La generación se hace por rebanadas de tiempo, así que la interfaz nunca se congela.
 
 ### Los colores

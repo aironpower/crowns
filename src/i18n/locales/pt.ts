@@ -139,6 +139,16 @@ export const pt: Dict = {
   "win.shareLink": "Link para partilhar",
   "win.shareFail": "Copia o link à mão:",
 
+  "daily.title": "Puzzles do dia",
+  "daily.subtitle": "Um tabuleiro novo por dia, o mesmo para toda a gente.",
+  "daily.today": "Hoje",
+  "daily.notPlayed": "Por resolver",
+  "daily.play": "Jogar",
+  "daily.streak": "Sequência de {count} dia(s)",
+  "daily.solvedCount": "{done} de {total} resolvidos",
+
+  "game.archivedDaily": "Puzzle do dia {date}.",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

@@ -885,6 +885,18 @@ input:hover {
   }
 }
 
+/* Archivo de puzles del día: los resueltos, con un toque de color. */
+.daily-list li.done .feed-main span:first-child {
+  color: var(--ok);
+}
+.daily-list li.done .board-preview {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ok) 45%, transparent);
+}
+.daily-list .pill.small {
+  color: var(--ok);
+  border-color: color-mix(in srgb, var(--ok) 40%, transparent);
+}
+
 .table-wrap {
   overflow-x: auto;
   margin: 0 -4px;

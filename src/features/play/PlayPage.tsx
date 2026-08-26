@@ -4,7 +4,8 @@ import { Board } from "../../components/Board";
 import { formatTime } from "../../components/format";
 import { useI18n } from "../../i18n";
 import { useAuth } from "../auth/AuthProvider";
-import { dailyPuzzle, puzzleFromFingerprint } from "../../game/generator";
+import { puzzleFromFingerprint } from "../../game/generator";
+import { DAILY_SIZE, dailyFor } from "../../game/daily";
 import { todayKey } from "../../game/rng";
 import { SIZES, type Size } from "../../game/types";
 import { useGame, type SolveSummary } from "../../game/useGame";
@@ -13,8 +14,6 @@ import { hasPlayedDaily, submitPlay } from "../../lib/api";
 import { useSettings } from "../../lib/useSettings";
 
 type SaveState = "idle" | "saving" | "saved" | "local" | "error";
-
-const DAILY_SIZE: Size = 8;
 
 export function PlayPage() {
   const { t } = useI18n();
@@ -98,13 +97,23 @@ export function PlayPage() {
   const startDaily = useCallback(() => {
     resetFlags();
     setBest(bestTime(DAILY_SIZE));
-    loadPuzzle(dailyPuzzle(today, DAILY_SIZE), "daily");
+    loadPuzzle(dailyFor(today, DAILY_SIZE), "daily");
   }, [loadPuzzle, today]);
 
   // Primera carga: tablero compartido por URL, o partida libre.
   useEffect(() => {
     if (started.current) return;
     started.current = true;
+    // ?daily=AAAA-MM-DD abre el puzle de ese día; solo el de hoy cuenta como diario.
+    const dayParam = params.get("daily");
+    if (dayParam && /^\d{4}-\d{2}-\d{2}$/.test(dayParam)) {
+      setSize(DAILY_SIZE);
+      setBest(bestTime(DAILY_SIZE));
+      loadPuzzle(dailyFor(dayParam, DAILY_SIZE), dayParam === today ? "daily" : "practice");
+      if (dayParam !== today) game.setMessage(t("game.archivedDaily", { date: dayParam }));
+      return;
+    }
+
     const boardParam = params.get("board");
     const fromLink = boardParam ? puzzleFromFingerprint(boardParam) : null;
     if (fromLink) {
@@ -116,7 +125,7 @@ export function PlayPage() {
     }
     setBest(bestTime(size));
     void newGame(size, "practice");
-  }, [params, loadPuzzle, newGame, size, game, t]);
+  }, [params, loadPuzzle, newGame, size, game, t, today]);
 
   // ¿Ya se jugó el diario de hoy?
   useEffect(() => {

@@ -139,6 +139,16 @@ export const de: Dict = {
   "win.shareLink": "Link zum Teilen",
   "win.shareFail": "Kopiere den Link von Hand:",
 
+  "daily.title": "Tagesrätsel",
+  "daily.subtitle": "Jeden Tag ein neues Feld, für alle dasselbe.",
+  "daily.today": "Heute",
+  "daily.notPlayed": "Ungelöst",
+  "daily.play": "Spielen",
+  "daily.streak": "{count} Tage in Folge",
+  "daily.solvedCount": "{done} von {total} gelöst",
+
+  "game.archivedDaily": "Tagesrätsel vom {date}.",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };

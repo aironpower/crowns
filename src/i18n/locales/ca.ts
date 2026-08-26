@@ -139,6 +139,16 @@ export const ca: Dict = {
   "win.shareLink": "Enllaç per compartir",
   "win.shareFail": "Copia l'enllaç a mà:",
 
+  "daily.title": "Puzles del dia",
+  "daily.subtitle": "Un tauler nou cada dia, el mateix per a tothom.",
+  "daily.today": "Avui",
+  "daily.notPlayed": "Sense resoldre",
+  "daily.play": "Jugar",
+  "daily.streak": "Ratxa de {count} dia/es",
+  "daily.solvedCount": "{done} de {total} resolts",
+
+  "game.archivedDaily": "Puzle del dia del {date}.",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

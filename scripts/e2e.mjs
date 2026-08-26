@@ -218,6 +218,44 @@ const SCRIPT = `(async () => {
   await go("Historial");
   ok(/Historial/i.test($("main").textContent), "la pestaña Historial carga");
   ok($$("table tbody tr").length >= 1, "la partida recién jugada aparece en el historial");
+  // archivo de puzles del día: resolvemos el de hoy y debe quedar marcado
+  await go("Historial");
+  ok(await wait(() => $$(".daily-list li").length >= 14, 15000), "el archivo lista los últimos 14 días (" + $$(".daily-list li").length + ")");
+  const hoy = $$(".daily-list li")[0];
+  ok(/Hoy/i.test(hoy?.innerText ?? ""), "el primero del archivo es hoy");
+  const sinResolver = (hoy?.innerText ?? "");
+  ok(/sin resolver|unsolved|ungelöst|non résolue|por resolver|sense resoldre/i.test(sinResolver), "hoy figura sin resolver");
+
+  $$(".daily-list li a")[0].click();
+  await new Promise(r => setTimeout(r, 1500));
+  ok(await wait(() => $$(".cell").length > 0, 12000), "se abre el tablero del día");
+  const esDiario = $$(".mode-switch button").some(b => b.classList.contains("active") && /día|day|jour|dia|tages/i.test(b.textContent));
+  ok(esDiario, "se abre en modo diario");
+
+  {
+    const cs = $$(".cell"), m = Math.round(Math.sqrt(cs.length));
+    const key = {}, reg = [];
+    cs.forEach((c, i) => { const k = c.style.getPropertyValue("--region-l"); if (!(k in key)) key[k] = Object.keys(key).length; reg[i] = key[k]; });
+    const p2 = [];
+    const bt2 = (r, cu, ru, prev) => { if (r === m) return true;
+      for (let c = 0; c < m; c++) { if (cu & (1 << c)) continue; if (Math.abs(c - prev) <= 1) continue;
+        const g = reg[r * m + c]; if (ru & (1 << g)) continue; p2[r] = c; if (bt2(r + 1, cu | (1 << c), ru | (1 << g), c)) return true; } return false; };
+    bt2(0, 0, 0, -3);
+    for (let r = 0; r < m; r++) {
+      const cell = $$(".cell")[r * m + p2[r]];
+      click(cell); await new Promise(x => setTimeout(x, 60));
+      if (!$$(".cell")[r * m + p2[r]].querySelector(".crown")) { click($$(".cell")[r * m + p2[r]]); await new Promise(x => setTimeout(x, 60)); }
+    }
+  }
+  ok(await wait(() => !!$(".win-overlay"), 4000), "se resuelve el puzle del día");
+
+  await go("Historial");
+  await new Promise(r => setTimeout(r, 2500));
+  const hoy2 = $$(".daily-list li")[0];
+  ok(hoy2?.classList.contains("done"), "el archivo marca el día de hoy como resuelto");
+  const textoHoy = (hoy2?.innerText ?? "").split(String.fromCharCode(10)).join(" | ");
+  ok(/[0-9]:[0-9][0-9]/.test(textoHoy), "y guarda el tiempo del diario [" + textoHoy.slice(0, 60) + "]");
+
   await go("Comunidad");
   ok(/Comunidad/i.test($("main").textContent), "la pestaña Comunidad carga");
   await go("Entrar");
@@ -296,6 +334,7 @@ try {
   if (!ready) throw new Error("la página no cargó: " + URL_APP);
   // el idioma se autodetecta del navegador; para la prueba lo fijamos en español
   await evaluate(`(async () => {
+    localStorage.clear();
     localStorage.setItem("crowns.locale", JSON.stringify("es").slice(1, -1));
     localStorage.setItem("crowns.e2eSupabaseUrl", ${JSON.stringify(JSON.stringify(process.env.SUPABASE_URL ?? readSupabaseUrl()))});
     location.reload();

@@ -137,6 +137,16 @@ export const es = {
   "win.shareLink": "Enlace para compartir",
   "win.shareFail": "Copia el enlace a mano:",
 
+  "daily.title": "Puzles del día",
+  "daily.subtitle": "Un tablero nuevo cada día, el mismo para todo el mundo.",
+  "daily.today": "Hoy",
+  "daily.notPlayed": "Sin resolver",
+  "daily.play": "Jugar",
+  "daily.streak": "Racha de {count} día(s)",
+  "daily.solvedCount": "{done} de {total} resueltos",
+
+  "game.archivedDaily": "Puzle del día del {date}.",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };
