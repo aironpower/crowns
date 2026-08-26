@@ -6,6 +6,10 @@
 \set regions '{0,0,0,0,0,1,2,2,0,3,0,0,1,1,1,4,0,3,0,1,1,4,1,4,3,3,0,1,1,4,4,4,5,6,6,1,1,4,4,4,5,6,5,7,7,7,4,7,5,5,5,7,7,7,4,7,5,7,7,7,7,7,7,7}'
 \set solution '{7,3,1,4,2,6,0,5}'
 \set fingerprint '8:0000012203001114030114143301144456611444565777475557774757777777'
+\set regions_b '{0,0,1,1,1,1,2,2,3,0,1,4,4,1,1,2,3,4,4,4,4,4,2,2,3,4,4,4,5,4,5,5,3,3,3,5,5,4,5,5,3,5,5,5,5,5,5,6,3,6,6,5,6,6,5,6,7,7,6,6,6,6,6,6}'
+\set solution_b '{3,1,7,5,2,6,4,0}'
+\set regions_c '{0,0,1,1,2,2,2,2,0,0,3,3,3,4,4,2,0,3,3,5,3,4,4,4,0,0,3,5,6,4,4,4,0,5,5,5,6,4,4,4,0,0,0,6,6,6,4,4,7,0,6,6,6,4,4,6,7,0,6,6,6,6,6,6}'
+\set solution_c '{2,7,4,1,3,6,0,5}'
 -- Stub de lo que aporta Supabase (esquema auth, roles y auth.uid()).
 create schema if not exists auth;
 create table auth.users (
@@ -26,6 +30,7 @@ end $$;
 \i /work/migrations/0002_player_settings.sql
 \i /work/migrations/0003_verified_times.sql
 \i /work/migrations/0004_leagues.sql
+\i /work/migrations/0005_seasons.sql
 
 \echo '--- 1. trigger de perfil al registrarse ---'
 insert into auth.users (id, email, raw_user_meta_data)
@@ -250,4 +255,51 @@ set role authenticated;
 select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
 select pg_temp.intentar('delete from public.league_members where user_id = ''22222222-2222-2222-2222-222222222222''') as salirse;
 select count(*) as ligas_tras_salir from public.my_leagues;
+reset role;
+
+\echo '--- 15. temporada mensual y puesto en el tablero ---'
+-- Tableros nuevos: el de las pruebas anteriores ya está atado a otra fecha, y
+-- el índice del diario impide repetir jugador+tablero.
+insert into auth.users (id, email) values
+  ('44444444-4444-4444-4444-444444444444', 'd@example.com') on conflict do nothing;
+
+\echo '  día 1: tres jugadores, 30 s / 45 s / 60 s'
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select (public.submit_play(8, :'regions_b', :'solution_b', 30000, 0, 0, 'daily', date '2026-03-01')).duration_ms as j1;
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select (public.submit_play(8, :'regions_b', :'solution_b', 45000, 0, 0, 'daily', date '2026-03-01')).duration_ms as j2;
+select set_config('app.user_id', '33333333-3333-3333-3333-333333333333', false);
+select (public.submit_play(8, :'regions_b', :'solution_b', 60000, 0, 0, 'daily', date '2026-03-01')).duration_ms as j3;
+
+\echo '  día 2: solo dos, y el orden se invierte'
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select (public.submit_play(8, :'regions_c', :'solution_c', 20000, 0, 0, 'daily', date '2026-03-02')).duration_ms as j2b;
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select (public.submit_play(8, :'regions_c', :'solution_c', 50000, 0, 0, 'daily', date '2026-03-02')).duration_ms as j1b;
+
+\echo '  puntos por día: 10 / 8 / 6 según el tiempo'
+select p.username, dp.daily_date, dp.duration_ms, dp.position, dp.points
+  from public.daily_points dp join public.profiles p on p.id = dp.user_id
+ where dp.daily_date between date '2026-03-01' and date '2026-03-02'
+ order by dp.daily_date, dp.position;
+
+\echo '  la temporada suma los dos días (18 / 18 / 6, y quien juega más no pierde)'
+select username, points, days, best_ms from public.monthly_leaderboard
+ where month = '2026-03' order by points desc, best_ms;
+
+\echo '  tu puesto en el tablero del día 1'
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select * from public.board_standing('8:' || array_to_string(:'regions_b'::smallint[], ''));
+
+\echo '  quien no lo ha jugado no tiene puesto, pero ve el total'
+select set_config('app.user_id', '44444444-4444-4444-4444-444444444444', false);
+select place is null as sin_puesto, total, best_ms from public.board_standing('8:' || array_to_string(:'regions_b'::smallint[], ''));
+
+\echo '  la clasificación mensual de liga solo cuenta a sus miembros'
+grant select on public.league_monthly_leaderboard, public.daily_points, public.monthly_leaderboard to authenticated;
+set role authenticated;
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select count(*) as filas_liga_para_miembro from public.league_monthly_leaderboard;
+select set_config('app.user_id', '44444444-4444-4444-4444-444444444444', false);
+select count(*) as filas_liga_para_extrano from public.league_monthly_leaderboard;
 reset role;

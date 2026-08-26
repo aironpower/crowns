@@ -262,6 +262,11 @@ const SCRIPT = `(async () => {
 
   await go("Comunidad");
   ok(/Comunidad/i.test($("main").textContent), "la pestaña Comunidad carga");
+  await new Promise(r => setTimeout(r, 2500));
+  const titulos = $$("main section h2").map(h => h.textContent.trim());
+  ok(titulos.some(x => /temporada|season|época|saison/i.test(x)), "hay clasificación de la temporada: " + titulos.join(" · "));
+  ok(!$(".skeleton-row"), "no se queda ningún bloque cargando");
+  ok(!/algo ha ido mal|something went wrong/i.test($("main").textContent), "la comunidad carga sin errores");
   await go("Entrar");
   const configured = !!$(".auth");
   if (configured) {

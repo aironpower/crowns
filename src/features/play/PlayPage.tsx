@@ -10,8 +10,8 @@ import { todayKey } from "../../game/rng";
 import { SIZES, type Size } from "../../game/types";
 import { useGame, type SolveSummary } from "../../game/useGame";
 import { addLocalPlay, bestTime, localDailyDone, saveBestTime } from "../../lib/localStore";
-import { fetchBoardRanking, hasPlayedDaily, startAttempt, submitPlay } from "../../lib/api";
-import type { BoardRankRow } from "../../lib/types";
+import { fetchBoardRanking, fetchBoardStanding, hasPlayedDaily, startAttempt, submitPlay } from "../../lib/api";
+import type { BoardRankRow, BoardStanding } from "../../lib/types";
 import { buildShareCard } from "./shareCard";
 import { currentStreak } from "../../game/daily";
 import { localPlays } from "../../lib/localStore";
@@ -35,6 +35,7 @@ export function PlayPage() {
   const [shareText, setShareText] = useState("");
   const [copyFailed, setCopyFailed] = useState(false);
   const [duel, setDuel] = useState<BoardRankRow[] | null>(null);
+  const [standing, setStanding] = useState<BoardStanding | null>(null);
   /** Intento abierto en el servidor para la partida en curso. */
   const attemptId = useRef<string | null>(null);
   const today = todayKey();
@@ -101,9 +102,13 @@ export function PlayPage() {
   useEffect(() => {
     if (!game.solved || !game.puzzle || !configured) return;
     let alive = true;
-    fetchBoardRanking(game.puzzle.fingerprint)
+    const fingerprint = game.puzzle.fingerprint;
+    fetchBoardRanking(fingerprint)
       .then((rows) => alive && setDuel(rows))
       .catch(() => alive && setDuel([]));
+    fetchBoardStanding(fingerprint)
+      .then((row) => alive && setStanding(row))
+      .catch(() => undefined);
     return () => {
       alive = false;
     };
@@ -119,6 +124,7 @@ export function PlayPage() {
     setShareText("");
     setCopyFailed(false);
     setDuel(null);
+    setStanding(null);
     attemptId.current = null;
   };
 
@@ -373,6 +379,17 @@ export function PlayPage() {
                         ref={(node) => node?.select()}
                       />
                     </div>
+                  ) : null}
+
+                  {configured && standing && standing.place && standing.total > 1 ? (
+                    <p className="standing">
+                      <strong>{t("standing.place", { place: standing.place, total: standing.total })}</strong>
+                      {standing.place === 1
+                        ? ` · ${t("standing.best")}`
+                        : standing.best_ms && standing.your_ms
+                          ? ` · ${t("standing.gap", { gap: formatTime(standing.your_ms - standing.best_ms) })}`
+                          : ""}
+                    </p>
                   ) : null}
 
                   {configured && duel && duel.length > 0 ? (

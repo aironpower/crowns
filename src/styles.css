@@ -786,6 +786,20 @@ input:hover {
   padding: 8px 10px;
 }
 
+/* Tu puesto en el tablero, encima del duelo. */
+.standing {
+  margin: 12px 0 0 !important;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.standing strong {
+  color: var(--accent);
+}
+.mode-switch.small-switch button {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
 /* Duelo: quién más ha jugado este tablero. */
 .duel {
   margin-top: 14px;

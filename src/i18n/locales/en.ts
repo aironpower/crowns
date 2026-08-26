@@ -177,6 +177,17 @@ export const en: Dict = {
   "league.ranking": "Today's ranking in {name}",
   "league.noPlays": "Nobody in the league has solved today's puzzle yet.",
 
+  "season.title": "{month} season",
+  "season.points": "Points",
+  "season.days": "Days",
+  "season.empty": "No points yet this month.",
+  "season.rules": "10 points for the fastest of the day, 8 for second, 6 for third… and 1 for finishing.",
+  "standing.place": "{place} of {total}",
+  "standing.gap": "{gap} behind the leader",
+  "standing.best": "Fastest time!",
+  "league.tabToday": "Today",
+  "league.tabMonth": "Month",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };

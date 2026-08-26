@@ -177,6 +177,17 @@ export const ca: Dict = {
   "league.ranking": "Rànquing d'avui a {name}",
   "league.noPlays": "Ningú de la lliga ha resolt el puzle d'avui encara.",
 
+  "season.title": "Temporada de {month}",
+  "season.points": "Punts",
+  "season.days": "Dies",
+  "season.empty": "Encara no hi ha punts aquest mes.",
+  "season.rules": "10 punts al primer del dia, 8 al segon, 6 al tercer… i 1 per acabar.",
+  "standing.place": "{place}è de {total}",
+  "standing.gap": "a {gap} del primer",
+  "standing.best": "Millor temps!",
+  "league.tabToday": "Avui",
+  "league.tabMonth": "Mes",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

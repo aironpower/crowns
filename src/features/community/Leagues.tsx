@@ -4,8 +4,16 @@ import { useI18n } from "../../i18n";
 import { formatTime } from "../../components/format";
 import { SkeletonList } from "../../components/Skeleton";
 import { useAuth } from "../auth/AuthProvider";
-import { createLeague, fetchLeagueDaily, fetchMyLeagues, joinLeague, leaveLeague } from "../../lib/api";
-import type { DailyRankRow, League } from "../../lib/types";
+import {
+  createLeague,
+  fetchLeagueDaily,
+  fetchLeagueMonthly,
+  fetchMyLeagues,
+  joinLeague,
+  leaveLeague,
+  monthKey,
+} from "../../lib/api";
+import type { DailyRankRow, League, MonthRankRow } from "../../lib/types";
 
 /**
  * Ligas privadas: un grupo cerrado con su propio ranking del puzle del día.
@@ -18,6 +26,8 @@ export function Leagues({ today }: { today: string }) {
   const [leagues, setLeagues] = useState<League[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [ranking, setRanking] = useState<DailyRankRow[] | null>(null);
+  const [season, setSeason] = useState<MonthRankRow[] | null>(null);
+  const [tab, setTab] = useState<"today" | "month">("today");
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
@@ -44,13 +54,19 @@ export function Leagues({ today }: { today: string }) {
   useEffect(() => {
     if (!selected) {
       setRanking(null);
+      setSeason(null);
       return;
     }
     let alive = true;
     setRanking(null);
+    setSeason(null);
     fetchLeagueDaily(selected, today)
       .then((rows) => alive && setRanking(rows))
       .catch(() => alive && setRanking([]));
+    // Aparte, por lo mismo: sin la migración 0005 la vista mensual no existe.
+    fetchLeagueMonthly(selected, monthKey())
+      .then((rows) => alive && setSeason(rows))
+      .catch(() => alive && setSeason([]));
     return () => {
       alive = false;
     };
@@ -194,10 +210,50 @@ export function Leagues({ today }: { today: string }) {
             </button>
           </div>
 
-          {ranking === null ? (
+          <div className="mode-switch small-switch" role="group">
+            <button type="button" className={tab === "today" ? "active" : ""} onClick={() => setTab("today")}>
+              {t("league.tabToday")}
+            </button>
+            <button type="button" className={tab === "month" ? "active" : ""} onClick={() => setTab("month")}>
+              {t("league.tabMonth")}
+            </button>
+          </div>
+
+          {tab === "today" ? (
+            ranking === null ? (
+              <SkeletonList rows={2} thumb={false} />
+            ) : ranking.length === 0 ? (
+              <p className="muted">{t("league.noPlays")}</p>
+            ) : (
+              <div className="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>{t("table.rank")}</th>
+                      <th>{t("community.player")}</th>
+                      <th className="numeric">{t("community.time")}</th>
+                      <th className="numeric">{t("table.hints")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ranking.map((row, index) => (
+                      <tr key={row.user_id} className={row.user_id === user.id ? "me" : ""}>
+                        <td>
+                          <span className={`rank${index < 3 ? ` top${index + 1}` : ""}`}>{index + 1}</span>
+                        </td>
+                        <td>{row.display_name?.trim() || row.username}</td>
+                        <td className="numeric">{formatTime(row.duration_ms)}</td>
+                        <td className="numeric">{row.hints}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          ) : season === null ? (
             <SkeletonList rows={2} thumb={false} />
-          ) : ranking.length === 0 ? (
-            <p className="muted">{t("league.noPlays")}</p>
+          ) : season.length === 0 ? (
+            <p className="muted">{t("season.empty")}</p>
           ) : (
             <div className="table-wrap">
               <table>
@@ -205,19 +261,19 @@ export function Leagues({ today }: { today: string }) {
                   <tr>
                     <th>{t("table.rank")}</th>
                     <th>{t("community.player")}</th>
-                    <th className="numeric">{t("community.time")}</th>
-                    <th className="numeric">{t("table.hints")}</th>
+                    <th className="numeric">{t("season.points")}</th>
+                    <th className="numeric">{t("season.days")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ranking.map((row, index) => (
+                  {season.map((row, index) => (
                     <tr key={row.user_id} className={row.user_id === user.id ? "me" : ""}>
                       <td>
                         <span className={`rank${index < 3 ? ` top${index + 1}` : ""}`}>{index + 1}</span>
                       </td>
                       <td>{row.display_name?.trim() || row.username}</td>
-                      <td className="numeric">{formatTime(row.duration_ms)}</td>
-                      <td className="numeric">{row.hints}</td>
+                      <td className="numeric">{row.points}</td>
+                      <td className="numeric">{row.days}</td>
                     </tr>
                   ))}
                 </tbody>

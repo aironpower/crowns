@@ -6,21 +6,23 @@ import { BoardPreview } from "../../components/Board";
 import { SkeletonList } from "../../components/Skeleton";
 import { boardFromFingerprint } from "../../game/generator";
 import { useAuth } from "../auth/AuthProvider";
-import { fetchActivity, fetchDailyRanking, fetchSizeRanking } from "../../lib/api";
-import type { ActivityRow, DailyRankRow, SizeRankRow } from "../../lib/types";
+import { fetchActivity, fetchDailyRanking, fetchMonthly, fetchSizeRanking, monthKey } from "../../lib/api";
+import type { ActivityRow, DailyRankRow, MonthRankRow, SizeRankRow } from "../../lib/types";
 import { SIZES, type Size } from "../../game/types";
 import { todayKey } from "../../game/rng";
 import { supabase } from "../../lib/supabase";
 import { Leagues } from "./Leagues";
 
 export function CommunityPage() {
-  const { t, timeAgo } = useI18n();
+  const { t, timeAgo, locale } = useI18n();
   const { configured, user } = useAuth();
   const today = todayKey();
 
   const [activity, setActivity] = useState<ActivityRow[]>([]);
   const [daily, setDaily] = useState<DailyRankRow[]>([]);
   const [bySize, setBySize] = useState<SizeRankRow[]>([]);
+  const [season, setSeason] = useState<MonthRankRow[] | null>(null);
+  const month = monthKey();
   const [size, setSize] = useState<Size>(8);
   const [loading, setLoading] = useState(configured);
   const [sizeLoading, setSizeLoading] = useState(configured);
@@ -42,6 +44,19 @@ export function CommunityPage() {
       alive = false;
     };
   }, [configured, today, t]);
+
+  // La temporada va aparte: si la migración 0005 no está aplicada, la vista no
+  // existe y no debe arrastrar al resto de la página.
+  useEffect(() => {
+    if (!configured) return;
+    let alive = true;
+    fetchMonthly(month)
+      .then((rows) => alive && setSeason(rows))
+      .catch(() => alive && setSeason([]));
+    return () => {
+      alive = false;
+    };
+  }, [configured, month]);
 
   useEffect(() => {
     if (!configured) return;
@@ -155,6 +170,50 @@ export function CommunityPage() {
                     <td>{name(row)}</td>
                     <td className="numeric">{formatTime(row.duration_ms)}</td>
                     <td className="numeric">{row.hints}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      <section className="panel stack">
+        <div className="row wrap">
+          <h2>
+            {t("season.title", {
+              month: new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date()),
+            })}
+          </h2>
+          <div className="grow" />
+          <span className="muted small">{t("season.rules")}</span>
+        </div>
+        {season === null ? (
+          <SkeletonList rows={3} thumb={false} />
+        ) : season.length === 0 ? (
+          <p className="muted">{t("season.empty")}</p>
+        ) : (
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>{t("table.rank")}</th>
+                  <th>{t("community.player")}</th>
+                  <th className="numeric">{t("season.points")}</th>
+                  <th className="numeric">{t("season.days")}</th>
+                  <th className="numeric">{t("community.time")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {season.map((row, index) => (
+                  <tr key={row.user_id} className={user?.id === row.user_id ? "me" : ""}>
+                    <td>
+                      <span className={`rank${index < 3 ? ` top${index + 1}` : ""}`}>{index + 1}</span>
+                    </td>
+                    <td>{name(row)}</td>
+                    <td className="numeric">{row.points}</td>
+                    <td className="numeric">{row.days}</td>
+                    <td className="numeric">{row.best_ms ? formatTime(row.best_ms) : "—"}</td>
                   </tr>
                 ))}
               </tbody>

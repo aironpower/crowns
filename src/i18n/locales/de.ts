@@ -177,6 +177,17 @@ export const de: Dict = {
   "league.ranking": "Heutige Rangliste in {name}",
   "league.noPlays": "Aus der Liga hat das heutige Rätsel noch niemand gelöst.",
 
+  "season.title": "Saison {month}",
+  "season.points": "Punkte",
+  "season.days": "Tage",
+  "season.empty": "Diesen Monat gibt es noch keine Punkte.",
+  "season.rules": "10 Punkte für die schnellste Zeit des Tages, 8 für die zweite, 6 für die dritte… und 1 fürs Beenden.",
+  "standing.place": "{place}. von {total}",
+  "standing.gap": "{gap} hinter der Bestzeit",
+  "standing.best": "Bestzeit!",
+  "league.tabToday": "Heute",
+  "league.tabMonth": "Monat",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };

@@ -177,6 +177,17 @@ export const pt: Dict = {
   "league.ranking": "Ranking de hoje em {name}",
   "league.noPlays": "Ninguém da liga resolveu o puzzle de hoje ainda.",
 
+  "season.title": "Época de {month}",
+  "season.points": "Pontos",
+  "season.days": "Dias",
+  "season.empty": "Ainda não há pontos este mês.",
+  "season.rules": "10 pontos ao primeiro do dia, 8 ao segundo, 6 ao terceiro… e 1 por terminar.",
+  "standing.place": "{place}.º de {total}",
+  "standing.gap": "a {gap} do primeiro",
+  "standing.best": "Melhor tempo!",
+  "league.tabToday": "Hoje",
+  "league.tabMonth": "Mês",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

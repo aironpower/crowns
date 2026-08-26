@@ -77,6 +77,24 @@ export interface SizeRankRow {
   last_played: string;
 }
 
+export interface MonthRankRow {
+  month: string;
+  user_id: string;
+  username: string;
+  display_name: string | null;
+  points: number;
+  days: number;
+  best_ms: number | null;
+}
+
+/** Puesto propio en un tablero: «2.º de 37, a 14 s del primero». */
+export interface BoardStanding {
+  place: number | null;
+  total: number;
+  best_ms: number | null;
+  your_ms: number | null;
+}
+
 export interface League {
   id: string;
   name: string;

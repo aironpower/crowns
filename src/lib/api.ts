@@ -1,7 +1,7 @@
 import type { Locale } from "../i18n";
 import type { Puzzle, PuzzleMode, Size } from "../game/types";
 import { db } from "./supabase";
-import type { ActivityRow, BoardRankRow, DailyRankRow, League, PlayRow, PlayerStats, Profile, SizeRankRow } from "./types";
+import type { ActivityRow, BoardRankRow, BoardStanding, DailyRankRow, League, MonthRankRow, PlayRow, PlayerStats, Profile, SizeRankRow } from "./types";
 
 export interface SubmitPlayInput {
   puzzle: Puzzle;
@@ -229,4 +229,43 @@ export async function fetchLeagueDaily(leagueId: string, date: string): Promise<
     .order("duration_ms", { ascending: true });
   if (error) throw error;
   return (data ?? []) as DailyRankRow[];
+}
+
+// ------------------------------------------------------------- temporada
+
+/** Mes en formato AAAA-MM, que es como lo agrupan las vistas. */
+export function monthKey(date: Date = new Date()): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+export async function fetchMonthly(month: string, limit = 20): Promise<MonthRankRow[]> {
+  const { data, error } = await db()
+    .from("monthly_leaderboard")
+    .select("*")
+    .eq("month", month)
+    .order("points", { ascending: false })
+    .order("best_ms", { ascending: true })
+    .limit(limit);
+  if (error) throw error;
+  return (data ?? []) as MonthRankRow[];
+}
+
+export async function fetchLeagueMonthly(leagueId: string, month: string): Promise<MonthRankRow[]> {
+  const { data, error } = await db()
+    .from("league_monthly_leaderboard")
+    .select("*")
+    .eq("league_id", leagueId)
+    .eq("month", month)
+    .order("points", { ascending: false })
+    .order("best_ms", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as MonthRankRow[];
+}
+
+/** Tu puesto en un tablero. Devuelve null si la migración 0005 no está aplicada. */
+export async function fetchBoardStanding(fingerprint: string): Promise<BoardStanding | null> {
+  const { data, error } = await db().rpc("board_standing", { p_fingerprint: fingerprint });
+  if (error) return null;
+  const row = Array.isArray(data) ? data[0] : data;
+  return (row as BoardStanding) ?? null;
 }

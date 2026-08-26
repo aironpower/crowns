@@ -175,6 +175,17 @@ export const es = {
   "league.ranking": "Ranking de hoy en {name}",
   "league.noPlays": "Nadie de la liga ha resuelto el puzle de hoy todavía.",
 
+  "season.title": "Temporada de {month}",
+  "season.points": "Puntos",
+  "season.days": "Días",
+  "season.empty": "Todavía no hay puntos este mes.",
+  "season.rules": "10 puntos al primero del día, 8 al segundo, 6 al tercero… y 1 por terminar.",
+  "standing.place": "{place}.º de {total}",
+  "standing.gap": "a {gap} del primero",
+  "standing.best": "¡Mejor tiempo!",
+  "league.tabToday": "Hoy",
+  "league.tabMonth": "Mes",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };

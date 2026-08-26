@@ -10,14 +10,10 @@ concreto; los rankings globales solo tienen sentido cuando hay volumen.
 - **Duelo en el tablero compartido**: al resolver se ve quién más lo ha jugado y en cuánto.
 - **Tiempo medido por el servidor** (`start_attempt` + `submit_play`), con las partidas marcadas como verificadas.
 - **Ligas privadas**: grupos cerrados con código de seis caracteres y ranking propio del puzle del día.
+- **Temporadas mensuales**: puntos por posición del día (10, 8, 6… y 1 por terminar), sumados por mes. Global en Comunidad y dentro de cada liga.
+- **Puesto en el tablero**: al resolver, «2.º de 37 · a 14 s del primero».
 
 ## Siguiente
-
-### Temporadas mensuales — esfuerzo bajo
-
-`plays.played_on` ya guarda el día. Una vista que agregue por mes da un campeón
-mensual y una narrativa que el ranking diario no tiene. Puntos por posición del
-día (10, 8, 6…) en vez de por tiempo bruto, para que un mal día no hunda el mes.
 
 ### Puntuación en vez de tiempo bruto — esfuerzo medio
 
@@ -25,11 +21,6 @@ Hoy el ranking premia a quien juega con las ✕ automáticas activadas, que no e
 lo mismo que jugar mejor. Una puntuación que normalice por la mediana del día y
 penalice las pistas sería más justa. **Conviene decidirlo antes de que haya
 récords que la gente considere suyos.**
-
-### Percentiles del día — esfuerzo bajo
-
-En vez de una tabla, decir «2.º de 37, a 14 segundos del primero». Con pocos
-jugadores es más motivador que una lista.
 
 ### Duelo en tiempo real — esfuerzo alto
 
