@@ -154,6 +154,14 @@ export const en: Dict = {
   "donate.link": "Support the project",
   "donate.hint": "Crowns is free and ad-free. If you enjoy it, you can chip in.",
 
+  "share.daily": "Daily puzzle {date}",
+  "share.board": "{size}×{size} board",
+  "share.noHints": "no hints",
+  "duel.title": "Who else played this board",
+  "duel.empty": "Nobody else has played it yet. Share the link.",
+  "duel.verified": "Time measured by the server",
+  "duel.you": "you",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };

@@ -1,7 +1,7 @@
 import type { Locale } from "../i18n";
 import type { Puzzle, PuzzleMode, Size } from "../game/types";
 import { db } from "./supabase";
-import type { ActivityRow, DailyRankRow, PlayRow, PlayerStats, Profile, SizeRankRow } from "./types";
+import type { ActivityRow, BoardRankRow, DailyRankRow, PlayRow, PlayerStats, Profile, SizeRankRow } from "./types";
 
 export interface SubmitPlayInput {
   puzzle: Puzzle;
@@ -10,7 +10,29 @@ export interface SubmitPlayInput {
   moves: number;
   mode: PuzzleMode;
   dailyDate: string | null;
+  /** Intento abierto en el servidor; con él, la duración la mide el servidor. */
+  attemptId?: string | null;
 }
+
+/**
+ * Abre el cronómetro en el servidor al hacer la primera jugada. Si algo falla
+ * (sesión caducada, migración sin aplicar) devuelve null y la partida se guarda
+ * igual, solo que sin verificar.
+ */
+export async function startAttempt(puzzle: Puzzle): Promise<string | null> {
+  try {
+    const { data, error } = await db().rpc("start_attempt", {
+      p_size: puzzle.size,
+      p_regions: puzzle.regions,
+    });
+    if (error) return null;
+    return (data as string) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+const MISSING_FUNCTION = /Could not find the function|PGRST202|does not exist/i;
 
 /**
  * Registra una partida. El servidor valida que la solución cumpla las reglas
@@ -18,7 +40,7 @@ export interface SubmitPlayInput {
  * inventarse un tiempo bueno desde la consola del navegador.
  */
 export async function submitPlay(input: SubmitPlayInput): Promise<void> {
-  const { error } = await db().rpc("submit_play", {
+  const base = {
     p_size: input.puzzle.size,
     p_regions: input.puzzle.regions,
     p_solution: input.puzzle.solution,
@@ -27,8 +49,33 @@ export async function submitPlay(input: SubmitPlayInput): Promise<void> {
     p_moves: input.moves,
     p_mode: input.mode,
     p_daily_date: input.dailyDate,
-  });
+  };
+
+  const { error } = await db().rpc("submit_play", { ...base, p_attempt_id: input.attemptId ?? null });
+  if (!error) return;
+
+  // Con la migración de tiempos verificados sin aplicar, la función todavía no
+  // acepta el intento: se reintenta con la firma antigua para no perder la partida.
+  if (MISSING_FUNCTION.test(error.message ?? "")) {
+    const retry = await db().rpc("submit_play", base);
+    if (retry.error) throw retry.error;
+    return;
+  }
+  throw error;
+}
+
+/** Marcas de todos los jugadores en un tablero concreto, de menor a mayor tiempo. */
+export async function fetchBoardRanking(fingerprint: string, limit = 8): Promise<BoardRankRow[]> {
+  // select("*") a propósito: `verified` no existe hasta aplicar la migración
+  // 0003, y el duelo debe funcionar igual sin ella.
+  const { data, error } = await db()
+    .from("recent_activity")
+    .select("*")
+    .eq("fingerprint", fingerprint)
+    .order("duration_ms", { ascending: true })
+    .limit(limit);
   if (error) throw error;
+  return (data ?? []) as BoardRankRow[];
 }
 
 export async function fetchProfile(userId: string): Promise<Profile | null> {

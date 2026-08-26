@@ -154,6 +154,14 @@ export const ca: Dict = {
   "donate.link": "Donar suport al projecte",
   "donate.hint": "Crowns és gratuït i sense anuncis. Si t'agrada, pots fer un cop de mà.",
 
+  "share.daily": "Puzle del dia {date}",
+  "share.board": "tauler {size}×{size}",
+  "share.noHints": "sense pistes",
+  "duel.title": "Qui més ha jugat aquest tauler",
+  "duel.empty": "Encara no l'ha jugat ningú més. Comparteix l'enllaç.",
+  "duel.verified": "Temps mesurat pel servidor",
+  "duel.you": "tu",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

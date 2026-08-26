@@ -24,6 +24,7 @@ end $$;
 \echo '--- aplicando la migración ---'
 \i /work/migrations/0001_init.sql
 \i /work/migrations/0002_player_settings.sql
+\i /work/migrations/0003_verified_times.sql
 
 \echo '--- 1. trigger de perfil al registrarse ---'
 insert into auth.users (id, email, raw_user_meta_data)
@@ -132,3 +133,52 @@ do $$ begin
   if found then raise notice 'FALLO: pudo cambiar las preferencias de otro'; else raise notice 'OK no puede tocar las preferencias ajenas'; end if;
 end $$;
 reset role;
+
+\echo '--- 13. tiempo medido por el servidor ---'
+
+-- helper: enviar indicando (o no) un intento abierto
+create or replace function pg_temp.enviar(
+  p_size int, p_regions smallint[], p_solution smallint[], p_ms int, p_attempt uuid
+) returns text language plpgsql as $fn$
+declare r public.plays;
+begin
+  r := public.submit_play(p_size, p_regions, p_solution, p_ms, 0, 0, 'practice', null, p_attempt);
+  return 'duracion=' || r.duration_ms || 'ms verificada=' || r.verified;
+exception when others then return 'RECHAZADA (' || sqlerrm || ')';
+end $fn$;
+
+\echo '  sin intento: se guarda lo que dice el cliente, sin verificar'
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select pg_temp.enviar(8, :'regions', :'solution', 45000, null) as sin_intento;
+
+\echo '  con intento: el cliente dice 1 s, el servidor mide 2 s de verdad'
+select set_config('app.user_id', '22222222-2222-2222-2222-222222222222', false);
+select public.start_attempt(8, :'regions') as intento \gset
+select pg_sleep(2);
+select pg_temp.enviar(8, :'regions', :'solution', 1000, :'intento') as con_intento;
+
+\echo '  el mismo intento no vale dos veces (vuelve a no estar verificada)'
+select pg_temp.enviar(8, :'regions', :'solution', 1000, :'intento') as reutilizado;
+
+\echo '  el intento de otro jugador tampoco sirve'
+select set_config('app.user_id', '33333333-3333-3333-3333-333333333333', false);
+select public.start_attempt(8, :'regions') as ajeno \gset
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+select pg_temp.enviar(8, :'regions', :'solution', 1000, :'ajeno') as intento_ajeno;
+
+\echo '  start_attempt exige sesión'
+select set_config('app.user_id', '', false);
+do $$ begin
+  perform public.start_attempt(8, (select regions from public.puzzles limit 1));
+  raise notice 'FALLO: abrió intento sin sesión';
+exception when others then raise notice 'OK sin sesión no se abre intento (%)', sqlerrm;
+end $$;
+
+\echo '  la tabla de intentos no la ve ningún usuario'
+select set_config('app.user_id', '11111111-1111-1111-1111-111111111111', false);
+grant usage on schema public to authenticated;
+grant select on public.attempts to authenticated;
+set role authenticated;
+select count(*) as intentos_visibles_para_un_usuario from public.attempts;
+reset role;
+select count(*) as intentos_reales from public.attempts;

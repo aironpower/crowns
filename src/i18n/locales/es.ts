@@ -152,6 +152,14 @@ export const es = {
   "donate.link": "Apoyar el proyecto",
   "donate.hint": "Crowns es gratis y sin anuncios. Si te gusta, puedes echar una mano.",
 
+  "share.daily": "Puzle del día {date}",
+  "share.board": "tablero {size}×{size}",
+  "share.noHints": "sin pistas",
+  "duel.title": "Quién más ha jugado este tablero",
+  "duel.empty": "Nadie más lo ha jugado todavía. Comparte el enlace.",
+  "duel.verified": "Tiempo medido por el servidor",
+  "duel.you": "tú",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };

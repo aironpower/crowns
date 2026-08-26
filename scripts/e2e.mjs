@@ -205,9 +205,13 @@ const SCRIPT = `(async () => {
   ok(!!btnCompartir, "el diálogo de victoria ofrece compartir");
   btnCompartir.click();
   await new Promise(r => setTimeout(r, 900));
-  const campo = $(".share-box input");
-  ok(!!campo, "aparece el enlace para compartir");
-  ok((campo?.value ?? "").includes("?board="), "el enlace lleva el tablero: " + (campo?.value ?? "").slice(-24));
+  const campo = $(".share-box textarea");
+  ok(!!campo, "aparece la tarjeta de resultado");
+  const tarjeta = campo?.value ?? "";
+  ok(tarjeta.includes("Crowns"), "la tarjeta se identifica");
+  ok(/[0-9]:[0-9][0-9]/.test(tarjeta), "lleva el tiempo");
+  ok(tarjeta.includes("?board=") || tarjeta.includes("?daily="), "y el enlace al mismo tablero");
+  ok(tarjeta.split(String.fromCharCode(10)).length <= 4, "cabe en un mensaje corto");
 
   // navegación entre secciones
   const go = async (name) => {

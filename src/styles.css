@@ -773,11 +773,75 @@ input:hover {
   flex-direction: column;
   gap: 4px;
 }
-.share-box input {
+.share-box textarea {
   width: 100%;
+  resize: none;
+  font: inherit;
   font-size: 12px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+/* Duelo: quién más ha jugado este tablero. */
+.duel {
+  margin-top: 14px;
+  text-align: left;
+  border-top: 1px solid var(--line-soft);
+  padding-top: 10px;
+}
+.duel h3 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+.duel ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: puesto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.duel li {
+  counter-increment: puesto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 3px 6px;
+  border-radius: 7px;
+}
+.duel li::before {
+  content: counter(puesto) ".";
+  color: var(--muted);
+  font-size: 11px;
+  min-width: 14px;
+}
+.duel li.me {
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.duel-name {
+  flex: 1;
+  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.duel-time {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.duel .verified {
+  color: var(--ok);
+  margin-left: 4px;
+  cursor: help;
 }
 
 .rules summary {

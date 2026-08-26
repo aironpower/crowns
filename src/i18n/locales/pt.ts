@@ -154,6 +154,14 @@ export const pt: Dict = {
   "donate.link": "Apoiar o projeto",
   "donate.hint": "O Crowns é gratuito e sem anúncios. Se gostas, podes dar uma ajuda.",
 
+  "share.daily": "Puzzle do dia {date}",
+  "share.board": "tabuleiro {size}×{size}",
+  "share.noHints": "sem dicas",
+  "duel.title": "Quem mais jogou este tabuleiro",
+  "duel.empty": "Mais ninguém o jogou. Partilha o link.",
+  "duel.verified": "Tempo medido pelo servidor",
+  "duel.you": "tu",
+
   "theme.toggle": "Mudar tema",
   "lang.label": "Idioma",
 };

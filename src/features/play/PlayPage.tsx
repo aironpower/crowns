@@ -10,13 +10,17 @@ import { todayKey } from "../../game/rng";
 import { SIZES, type Size } from "../../game/types";
 import { useGame, type SolveSummary } from "../../game/useGame";
 import { addLocalPlay, bestTime, localDailyDone, saveBestTime } from "../../lib/localStore";
-import { hasPlayedDaily, submitPlay } from "../../lib/api";
+import { fetchBoardRanking, hasPlayedDaily, startAttempt, submitPlay } from "../../lib/api";
+import type { BoardRankRow } from "../../lib/types";
+import { buildShareCard } from "./shareCard";
+import { currentStreak } from "../../game/daily";
+import { localPlays } from "../../lib/localStore";
 import { useSettings } from "../../lib/useSettings";
 
 type SaveState = "idle" | "saving" | "saved" | "local" | "error";
 
 export function PlayPage() {
-  const { t } = useI18n();
+  const { t, formatDate } = useI18n();
   const { user, configured } = useAuth();
   const [params] = useSearchParams();
 
@@ -28,8 +32,11 @@ export function PlayPage() {
   /** Fecha del diario que hay en pantalla; se fija al cargarlo, no al enviarlo. */
   const loadedDaily = useRef<string | null>(null);
   const [shared, setShared] = useState(false);
-  const [shareUrl, setShareUrl] = useState("");
+  const [shareText, setShareText] = useState("");
   const [copyFailed, setCopyFailed] = useState(false);
+  const [duel, setDuel] = useState<BoardRankRow[] | null>(null);
+  /** Intento abierto en el servidor para la partida en curso. */
+  const attemptId = useRef<string | null>(null);
   const today = todayKey();
 
   const handleSolved = useCallback(
@@ -48,6 +55,7 @@ export function PlayPage() {
             moves,
             mode,
             dailyDate: mode === "daily" ? loadedDaily.current : null,
+            attemptId: attemptId.current,
           });
           setSaveState("saved");
           if (mode === "daily") setDailyDone(true);
@@ -74,8 +82,33 @@ export function PlayPage() {
     [user, configured],
   );
 
+
+
   const settings = useSettings();
-  const game = useGame({ onSolved: handleSolved, autoMark: settings.autoMark });
+  const game = useGame({
+    onSolved: handleSolved,
+    autoMark: settings.autoMark,
+    // El cronómetro de verdad lo lleva el servidor desde la primera jugada.
+    onStart: (puzzle) => {
+      if (!user || !configured) return;
+      void startAttempt(puzzle).then((id) => {
+        attemptId.current = id;
+      });
+    },
+  });
+  // Al terminar, quién más ha hecho este tablero: convierte cada enlace
+  // compartido en un duelo.
+  useEffect(() => {
+    if (!game.solved || !game.puzzle || !configured) return;
+    let alive = true;
+    fetchBoardRanking(game.puzzle.fingerprint)
+      .then((rows) => alive && setDuel(rows))
+      .catch(() => alive && setDuel([]));
+    return () => {
+      alive = false;
+    };
+  }, [game.solved, game.puzzle, configured, saveState]);
+
   const { loadPuzzle, newGame } = game;
   const started = useRef(false);
 
@@ -83,8 +116,10 @@ export function PlayPage() {
     setSaveState("idle");
     setRecord(false);
     setShared(false);
-    setShareUrl("");
+    setShareText("");
     setCopyFailed(false);
+    setDuel(null);
+    attemptId.current = null;
   };
 
   const startPractice = useCallback(
@@ -183,19 +218,32 @@ export function PlayPage() {
    */
   const share = async () => {
     if (!game.puzzle) return;
-    const url = `${window.location.origin}${window.location.pathname}?board=${encodeURIComponent(game.puzzle.fingerprint)}`;
-    setShareUrl(url);
+    const streak = currentStreak(
+      new Set(localPlays().filter((play) => play.daily_date).map((play) => play.daily_date as string)),
+    );
+    const card = buildShareCard({
+      puzzle: game.puzzle,
+      mode: game.mode,
+      durationMs: game.elapsedMs,
+      hints: game.hints,
+      streak,
+      dailyDate: loadedDaily.current,
+      origin: window.location.origin,
+      t,
+      formatDate,
+    });
+    setShareText(card);
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: t("app.title"), url });
+        await navigator.share({ title: t("app.title"), text: card });
         return;
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") return; // lo canceló
       }
     }
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(card);
       setShared(true);
       window.setTimeout(() => setShared(false), 2500);
     } catch {
@@ -313,16 +361,41 @@ export function PlayPage() {
                       {shared ? t("win.copied") : t("win.share")}
                     </button>
                   </div>
-                  {shareUrl && (shared || copyFailed) ? (
+                  {shareText && (shared || copyFailed) ? (
                     <div className="share-box">
                       {copyFailed ? <p className="muted small">{t("win.shareFail")}</p> : null}
-                      <input
+                      <textarea
                         readOnly
-                        value={shareUrl}
+                        rows={4}
+                        value={shareText}
                         aria-label={t("win.shareLink")}
                         onFocus={(event) => event.currentTarget.select()}
                         ref={(node) => node?.select()}
                       />
+                    </div>
+                  ) : null}
+
+                  {configured && duel && duel.length > 0 ? (
+                    <div className="duel">
+                      <h3>{t("duel.title")}</h3>
+                      <ol>
+                        {duel.map((row) => (
+                          <li key={row.id} className={row.user_id === user?.id ? "me" : ""}>
+                            <span className="duel-name">
+                              {row.display_name?.trim() || row.username}
+                              {row.user_id === user?.id ? ` (${t("duel.you")})` : ""}
+                            </span>
+                            <span className="duel-time">
+                              {formatTime(row.duration_ms)}
+                              {row.verified ? (
+                                <span className="verified" title={t("duel.verified")}>
+                                  ✓
+                                </span>
+                              ) : null}
+                            </span>
+                          </li>
+                        ))}
+                      </ol>
                     </div>
                   ) : null}
                 </div>

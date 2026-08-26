@@ -43,6 +43,19 @@ export interface ActivityRow {
   display_name: string | null;
 }
 
+/** Una marca de otro jugador en el mismo tablero. */
+export interface BoardRankRow {
+  id: string;
+  user_id: string;
+  username: string;
+  display_name: string | null;
+  duration_ms: number;
+  hints: number;
+  /** Solo existe con la migración 0003 aplicada. */
+  verified?: boolean;
+  created_at: string;
+}
+
 export interface DailyRankRow {
   daily_date: string;
   size: Size;

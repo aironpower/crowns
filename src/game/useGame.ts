@@ -13,13 +13,15 @@ export interface SolveSummary {
 
 interface Options {
   onSolved: (summary: SolveSummary) => void;
+  /** Se llama en la primera jugada, cuando arranca el cronómetro. */
+  onStart?: (puzzle: Puzzle) => void;
   /** Preferencia del jugador; vive fuera del juego porque se guarda en su perfil. */
   autoMark: boolean;
 }
 
 const emptyBoard = (size: number): CellState[] => new Array(size * size).fill(EMPTY) as CellState[];
 
-export function useGame({ onSolved, autoMark }: Options) {
+export function useGame({ onSolved, onStart, autoMark }: Options) {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [mode, setMode] = useState<PuzzleMode>("practice");
   const [cells, setCells] = useState<CellState[]>([]);
@@ -40,6 +42,10 @@ export function useGame({ onSolved, autoMark }: Options) {
   onSolvedRef.current = onSolved;
   const autoMarkRef = useRef(autoMark);
   autoMarkRef.current = autoMark;
+  const onStartRef = useRef(onStart);
+  onStartRef.current = onStart;
+  const puzzleRef = useRef<Puzzle | null>(null);
+  puzzleRef.current = puzzle;
 
   const [historyDepth, setHistoryDepth] = useState(0);
   const [running, setRunning] = useState(false);
@@ -61,6 +67,7 @@ export function useGame({ onSolved, autoMark }: Options) {
       pausedAt.current = null;
       setElapsedMs(0);
       setRunning(true);
+      if (puzzleRef.current) onStartRef.current?.(puzzleRef.current);
     }
   }, []);
 

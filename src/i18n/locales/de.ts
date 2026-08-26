@@ -154,6 +154,14 @@ export const de: Dict = {
   "donate.link": "Projekt unterstützen",
   "donate.hint": "Crowns ist kostenlos und werbefrei. Wenn es dir gefällt, kannst du etwas beisteuern.",
 
+  "share.daily": "Tagesrätsel {date}",
+  "share.board": "{size}×{size}-Feld",
+  "share.noHints": "ohne Tipps",
+  "duel.title": "Wer dieses Feld noch gespielt hat",
+  "duel.empty": "Sonst hat es noch niemand gespielt. Teil den Link.",
+  "duel.verified": "Zeit vom Server gemessen",
+  "duel.you": "du",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };
