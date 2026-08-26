@@ -307,7 +307,9 @@ const SCRIPT = `(async () => {
   ok(/condiciones/i.test($(".legal")?.innerText ?? ""), "las condiciones se muestran");
 
   // firma del pie
-  const autor = $$(".site-footer a").find(a => /softie\.dev/i.test(a.href));
+  // ojo: en producción los enlaces legales son crowns.softie.dev, así que
+  // comparamos el dominio exacto y no una subcadena
+  const autor = $$(".site-footer a").find(a => { try { return new URL(a.href).hostname === "softie.dev"; } catch { return false; } });
   ok(!!autor, "el pie enlaza a softie.dev");
   ok(/Softie Development/i.test(autor?.textContent ?? ""), "y lo firma Softie Development");
 
