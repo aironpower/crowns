@@ -132,6 +132,10 @@ export const en: Dict = {
   "profile.noPlays": "You haven't solved any puzzle yet.",
   "profile.member": "@{name} · since {date}",
 
+  "legal.privacy": "Privacy",
+  "legal.terms": "Terms of service",
+  "legal.pending": "Pending: the operator's details are still missing in src/legal/entity.ts.",
+
   "theme.toggle": "Switch theme",
   "lang.label": "Language",
 };

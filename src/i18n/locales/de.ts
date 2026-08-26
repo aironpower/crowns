@@ -132,6 +132,10 @@ export const de: Dict = {
   "profile.noPlays": "Du hast noch kein Rätsel gelöst.",
   "profile.member": "@{name} · seit {date}",
 
+  "legal.privacy": "Datenschutz",
+  "legal.terms": "Nutzungsbedingungen",
+  "legal.pending": "Ausstehend: Die Angaben zum Betreiber fehlen noch in src/legal/entity.ts.",
+
   "theme.toggle": "Thema wechseln",
   "lang.label": "Sprache",
 };

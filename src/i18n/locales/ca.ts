@@ -132,6 +132,10 @@ export const ca: Dict = {
   "profile.noPlays": "Encara no has resolt cap puzle.",
   "profile.member": "@{name} · des del {date}",
 
+  "legal.privacy": "Privacitat",
+  "legal.terms": "Condicions del servei",
+  "legal.pending": "Pendent: falten les dades del responsable a src/legal/entity.ts.",
+
   "theme.toggle": "Canviar tema",
   "lang.label": "Idioma",
 };

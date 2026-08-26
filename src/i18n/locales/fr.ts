@@ -132,6 +132,10 @@ export const fr: Dict = {
   "profile.noPlays": "Tu n'as encore résolu aucun puzzle.",
   "profile.member": "@{name} · depuis le {date}",
 
+  "legal.privacy": "Confidentialité",
+  "legal.terms": "Conditions du service",
+  "legal.pending": "En attente : les informations du responsable manquent dans src/legal/entity.ts.",
+
   "theme.toggle": "Changer de thème",
   "lang.label": "Langue",
 };

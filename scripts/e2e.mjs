@@ -232,6 +232,21 @@ const SCRIPT = `(async () => {
   window.dispatchEvent(new PopStateEvent("popstate"));
   await new Promise(r => setTimeout(r, 500));
 
+  // páginas legales
+  const legalLinks = $$(".legal-links a");
+  ok(legalLinks.length === 2, "el pie enlaza privacidad y condiciones (" + legalLinks.length + ")");
+  legalLinks[0].click();
+  await new Promise(r => setTimeout(r, 600));
+  ok(location.pathname === "/privacy", "el enlace lleva a /privacy");
+  const privacyText = $(".legal")?.innerText ?? "";
+  ok(/privacidad/i.test(privacyText), "la política se muestra en el idioma activo");
+  ok(!/\{[a-z]+\}/i.test(privacyText), "no queda ningún marcador sin sustituir");
+  ok($$(".legal h2").length >= 8, "la política tiene todas las secciones (" + $$(".legal h2").length + ")");
+  $$(".legal-footer a").find(a => /condiciones/i.test(a.textContent))?.click();
+  await new Promise(r => setTimeout(r, 600));
+  ok(location.pathname === "/terms", "desde privacidad se llega a las condiciones");
+  ok(/condiciones/i.test($(".legal")?.innerText ?? ""), "las condiciones se muestran");
+
   // cambio de idioma
   const select = $$("select").find(s => [...s.options].some(o => o.value === "en"));
   select.value = "en";

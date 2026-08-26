@@ -130,6 +130,10 @@ export const es = {
   "profile.noPlays": "Aún no has resuelto ningún puzle.",
   "profile.member": "@{name} · desde {date}",
 
+  "legal.privacy": "Privacidad",
+  "legal.terms": "Condiciones del servicio",
+  "legal.pending": "Pendiente: faltan por completar los datos del responsable en src/legal/entity.ts.",
+
   "theme.toggle": "Cambiar tema",
   "lang.label": "Idioma",
 };

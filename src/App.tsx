@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { Header } from "./components/Chrome";
 import { PlayPage } from "./features/play/PlayPage";
 import { HistoryPage } from "./features/history/HistoryPage";
 import { CommunityPage } from "./features/community/CommunityPage";
 import { ProfilePage } from "./features/profile/ProfilePage";
 import { AuthPage } from "./features/auth/AuthPage";
+import { LegalPage } from "./features/legal/LegalPage";
 import { useAuth } from "./features/auth/AuthProvider";
 import { useI18n } from "./i18n";
 import { isSupabaseConfigured } from "./lib/supabase";
@@ -37,12 +38,19 @@ export default function App() {
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/privacy" element={<LegalPage kind="privacy" />} />
+            <Route path="/terms" element={<LegalPage kind="terms" />} />
             <Route path="*" element={<PlayPage />} />
           </Routes>
         )}
       </main>
       <footer className="site-footer">
-        Crowns · {t("rules.unique")}
+        <p>Crowns · {t("rules.unique")}</p>
+        <p className="legal-links">
+          <Link to="/privacy">{t("legal.privacy")}</Link>
+          <span aria-hidden="true"> · </span>
+          <Link to="/terms">{t("legal.terms")}</Link>
+        </p>
       </footer>
     </div>
   );

@@ -70,6 +70,26 @@ a la app y la sesión no llega a crearse.
 Vuelve a ejecutar `npm run check`: los proveedores deben salir con ✓ y los botones
 aparecerán solos en la pantalla de acceso.
 
+## Textos legales
+
+La política de privacidad y las condiciones del servicio están en el propio juego,
+en los seis idiomas, y se enlazan desde el pie de todas las páginas:
+
+- `https://crowns.softie.dev/privacy`
+- `https://crowns.softie.dev/terms`
+
+Son las dos URL que pide Google en la pantalla de consentimiento de OAuth.
+
+Los datos del responsable (razón social, CIF, correo de contacto) están en un
+único sitio, [`src/legal/entity.ts`](src/legal/entity.ts): al cambiarlos ahí se
+actualizan los doce documentos. Mientras queden sin rellenar, las páginas muestran
+un aviso. Los textos por idioma viven en `src/legal/<idioma>.ts` y `legal.test.ts`
+comprueba que ninguno se quede corto ni con marcadores sin sustituir.
+
+Los textos describen con exactitud lo que hace la aplicación, pero **no son
+asesoramiento legal**: conviene que los revise quien lleve el asunto de la empresa
+antes de darlos por buenos.
+
 ## Cómo está montado
 
 | Carpeta | Qué hay |
