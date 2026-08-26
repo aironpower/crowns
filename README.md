@@ -157,7 +157,7 @@ Ya está todo preparado en el repositorio:
 
 - [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) compila y publica en cada push a `main`. Antes de publicar pasa `npm run typecheck` y `npm test`: si algo falla, no se sube nada.
 - [`public/CNAME`](public/CNAME) fija el dominio `crowns.softie.dev`.
-- `npm run build` genera además `dist/404.html` (copia de `index.html`). GitHub Pages no conoce las rutas de la SPA; sirviendo ese 404 el router se encarga y `crowns.softie.dev/community` funciona al entrar directo.
+- `npm run build` genera además `dist/404.html` y una carpeta con `index.html` propio para cada ruta conocida. GitHub Pages no conoce las rutas de la SPA: el 404 hace que cualquier dirección cargue la aplicación, y las carpetas hacen que `/privacy`, `/terms`, `/community`… respondan **200** en lugar de 404. Eso último importa para el buscador y para Google, que revisa la URL de la política de privacidad al aprobar la pantalla de consentimiento.
 
 ### Pasos
 
