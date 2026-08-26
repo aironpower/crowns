@@ -236,38 +236,6 @@ export function PlayPage() {
         </select>
       </section>
 
-      <section className="panel toolbar">
-        <button type="button" className="button" onClick={game.undo} disabled={!game.canUndo || game.loading}>
-          {t("game.undo")}
-        </button>
-        <button type="button" className="button" onClick={runHint} disabled={game.loading || game.solved}>
-          {t("game.hint")}
-        </button>
-        <button type="button" className="button" onClick={game.clear} disabled={game.loading}>
-          {t("game.clear")}
-        </button>
-        <button
-          type="button"
-          className="button primary"
-          onClick={() => (game.mode === "daily" ? startDaily() : startPractice(size))}
-          disabled={game.loading}
-        >
-          {t("game.new")}
-        </button>
-        <div className="grow" />
-        <label className="toggle">
-          <input type="checkbox" checked={game.autoMark} onChange={(e) => game.setAutoMark(e.target.checked)} />
-          {t("game.autoX")}
-        </label>
-        <label className="toggle">
-          <input
-            type="checkbox"
-            checked={game.showConflicts}
-            onChange={(e) => game.setShowConflicts(e.target.checked)}
-          />
-          {t("game.showConflicts")}
-        </label>
-      </section>
 
       {game.message ? <p className="note">{game.message}</p> : null}
       {game.mode === "daily" && dailyDone && !game.solved ? <p className="note">{t("game.dailyDone")}</p> : null}
@@ -313,6 +281,42 @@ export function PlayPage() {
           </>
         )}
       </div>
+
+      <section className="panel toolbar actions">
+        <button type="button" className="button" onClick={game.undo} disabled={!game.canUndo || game.loading} title={`${t("game.undo")} · Ctrl+Z`}>
+          {t("game.undo")}
+        </button>
+        <button type="button" className="button" onClick={runHint} disabled={game.loading || game.solved} title={`${t("game.hint")} · H`}>
+          {t("game.hint")}
+        </button>
+        <button type="button" className="button" onClick={game.clear} disabled={game.loading} title={`${t("game.clear")} · C`}>
+          {t("game.clear")}
+        </button>
+        <button
+          type="button"
+          className="button primary"
+          onClick={() => (game.mode === "daily" ? startDaily() : startPractice(size))}
+          disabled={game.loading}
+          title={`${t("game.new")} · N`}
+        >
+          {t("game.new")}
+        </button>
+        <div className="grow" />
+        <div className="switches">
+        <label className="toggle">
+          <input type="checkbox" checked={game.autoMark} onChange={(e) => game.setAutoMark(e.target.checked)} />
+          {t("game.autoX")}
+        </label>
+        <label className="toggle">
+          <input
+            type="checkbox"
+            checked={game.showConflicts}
+            onChange={(e) => game.setShowConflicts(e.target.checked)}
+          />
+          {t("game.showConflicts")}
+        </label>
+        </div>
+      </section>
 
       <details className="panel rules">
         <summary>{t("rules.title")}</summary>

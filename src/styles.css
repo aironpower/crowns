@@ -107,7 +107,7 @@ h2 {
 }
 
 .app {
-  max-width: 760px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px 16px 48px;
   display: flex;
@@ -116,16 +116,20 @@ h2 {
 }
 
 /* ------------------------------------------------------------- cabecera */
+/* Tres zonas: marca, navegación centrada y ajustes. Nada más. */
 .site-header {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  flex: none;
 }
 .brand svg {
   width: 30px;
@@ -153,6 +157,7 @@ h2 {
 .tabs {
   display: flex;
   min-width: 0;
+  margin: 0 auto;
   gap: 2px;
   background: var(--panel);
   border: 1px solid var(--line);
@@ -166,7 +171,7 @@ h2 {
   white-space: nowrap;
   font-size: 13px;
   font-weight: 500;
-  padding: 6px 13px;
+  padding: 6px 11px;
   border-radius: 999px;
   transition: color 0.15s ease, background 0.15s ease;
 }
@@ -183,13 +188,38 @@ h2 {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
+  flex: none;
 }
-.header-user {
-  width: 100%;
-  margin: -6px 0 0;
-  font-size: 12px;
-  color: var(--muted);
+/* La pestaña de cuenta lleva el avatar y el nombre: así se ve la sesión sin
+   una línea suelta de texto debajo de la cabecera. */
+.tab-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+}
+/* El nombre solo cabe en pantallas anchas; en el resto queda el avatar, que ya
+   identifica la cuenta, con el nombre en el tooltip y en la propia página. */
+.tab-account-name {
+  display: none;
+  max-width: 96px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (min-width: 880px) {
+  .tab-account-name {
+    display: inline;
+  }
+}
+.tab-account .identicon {
+  border-radius: 5px;
+  box-shadow: none;
+}
+.tab-account span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* --------------------------------------------------------------- piezas */
@@ -444,6 +474,26 @@ input:hover {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+}
+
+.actions {
+  gap: 8px;
+}
+.switches {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-left: 14px;
+  border-left: 1px solid var(--line-soft);
+}
+@media (max-width: 620px) {
+  .switches {
+    width: 100%;
+    padding: 8px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--line-soft);
+  }
 }
 
 /* -------------------------------------------------------------- tablero */

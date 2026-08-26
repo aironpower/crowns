@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { LOCALES, LOCALE_CODES, useI18n, type Locale } from "../i18n";
 import { readTheme, saveTheme, type ThemeChoice } from "../lib/localStore";
 import { useAuth } from "../features/auth/AuthProvider";
+import { Identicon } from "./Identicon";
 
 export function ThemeToggle() {
   const { t } = useI18n();
@@ -61,11 +62,11 @@ export function LanguagePicker({ onChange }: { onChange?: (locale: Locale) => vo
 
 export function Header() {
   const { t } = useI18n();
-  const { user, profile, guest, signOut } = useAuth();
+  const { user, profile } = useAuth();
 
   return (
     <header className="site-header">
-      <div className="brand">
+      <Link className="brand" to="/" aria-label={t("app.title")}>
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M3 8.5l3.6 3L12 4l5.4 7.5 3.6-3-1.7 9.2H4.7L3 8.5zM4.9 20h14.2v1.6H4.9V20z" />
         </svg>
@@ -73,29 +74,36 @@ export function Header() {
           <strong>{t("app.title")}</strong>
           <span>{t("app.tagline")}</span>
         </div>
-      </div>
+      </Link>
 
+      {/* Navegación en el centro; a la derecha solo ajustes. La sesión se ve en
+          la propia pestaña de perfil, con el avatar y el nombre. */}
       <nav className="tabs">
         <NavLink to="/" end>
           {t("nav.play")}
         </NavLink>
         <NavLink to="/history">{t("nav.history")}</NavLink>
         <NavLink to="/community">{t("nav.community")}</NavLink>
-        <NavLink to={user ? "/profile" : "/auth"}>{user ? t("nav.profile") : t("nav.signIn")}</NavLink>
+        <NavLink
+          to={user ? "/profile" : "/auth"}
+          className="tab-account"
+          title={profile ? t("auth.signedInAs", { name: profile.username }) : undefined}
+        >
+          {user && profile ? (
+            <>
+              <Identicon seed={user.id} size={20} />
+              <span className="tab-account-name">{profile.username}</span>
+            </>
+          ) : (
+            t("nav.signIn")
+          )}
+        </NavLink>
       </nav>
 
       <div className="header-actions">
         <LanguagePicker />
         <ThemeToggle />
-        {user ? (
-          <button type="button" className="button ghost" onClick={() => void signOut()}>
-            {t("nav.signOut")}
-          </button>
-        ) : guest ? (
-          <span className="pill">{t("nav.guest")}</span>
-        ) : null}
       </div>
-      {user && profile ? <p className="header-user">{t("auth.signedInAs", { name: profile.username })}</p> : null}
     </header>
   );
 }
