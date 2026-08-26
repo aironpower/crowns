@@ -265,8 +265,8 @@ export function ProfilePage() {
               onChange={(event) => setProfileLocale(event.target.value as Locale)}
             >
               {LOCALE_CODES.map((code) => (
-                <option key={code} value={code}>
-                  {LOCALES[code].flag} {LOCALES[code].label}
+                <option key={code} value={code} lang={code}>
+                  {LOCALES[code].label}
                 </option>
               ))}
             </select>

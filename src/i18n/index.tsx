@@ -6,17 +6,22 @@ import { pt } from "./locales/pt";
 import { fr } from "./locales/fr";
 import { de } from "./locales/de";
 
+/** Cada idioma se nombra en su propio idioma; sin banderas (una bandera no es un idioma). */
 export const LOCALES = {
-  es: { label: "Español", flag: "🇪🇸", dict: es },
-  en: { label: "English", flag: "🇬🇧", dict: en },
-  ca: { label: "Català", flag: "🏴", dict: ca },
-  pt: { label: "Português", flag: "🇵🇹", dict: pt },
-  fr: { label: "Français", flag: "🇫🇷", dict: fr },
-  de: { label: "Deutsch", flag: "🇩🇪", dict: de },
+  es: { label: "Español", dict: es },
+  en: { label: "English", dict: en },
+  ca: { label: "Català", dict: ca },
+  pt: { label: "Português", dict: pt },
+  fr: { label: "Français", dict: fr },
+  de: { label: "Deutsch", dict: de },
 } as const;
 
 export type Locale = keyof typeof LOCALES;
-export const LOCALE_CODES = Object.keys(LOCALES) as Locale[];
+
+/** Alfabéticamente por el nombre del idioma: Català, Deutsch, English, Español… */
+export const LOCALE_CODES = (Object.keys(LOCALES) as Locale[]).sort((a, b) =>
+  LOCALES[a].label.localeCompare(LOCALES[b].label, "en"),
+);
 
 const STORAGE_KEY = "crowns.locale";
 

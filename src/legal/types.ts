@@ -15,6 +15,9 @@ export interface LegalDoc {
 export interface LegalTexts {
   privacy: LegalDoc;
   terms: LegalDoc;
+  /** Se añade a la primera sección solo si hay domicilio configurado. */
+  addressLine: string;
 }
 
-export type LegalKind = keyof LegalTexts;
+/** Los dos documentos (addressLine no es un documento). */
+export type LegalKind = "privacy" | "terms";

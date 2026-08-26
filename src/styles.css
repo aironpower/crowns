@@ -302,9 +302,6 @@ input {
 input:hover {
   border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
 }
-.select.compact {
-  padding: 8px 6px 8px 10px;
-}
 .button:active:not(:disabled) {
   transform: translateY(1px);
 }

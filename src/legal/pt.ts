@@ -1,6 +1,8 @@
 import type { LegalTexts } from "./types";
 
 export const legalPt: LegalTexts = {
+  addressLine: "Morada: {address}.",
+
   privacy: {
     title: "Política de privacidade",
     intro:

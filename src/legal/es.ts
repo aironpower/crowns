@@ -1,6 +1,8 @@
 import type { LegalTexts } from "./types";
 
 export const legalEs: LegalTexts = {
+  addressLine: "Domicilio: {address}.",
+
   privacy: {
     title: "Política de privacidad",
     intro:
@@ -9,7 +11,7 @@ export const legalEs: LegalTexts = {
       {
         heading: "Quién es el responsable",
         body: [
-          "El responsable del tratamiento es {company}, con CIF {taxId}, titular del servicio publicado en {site}.",
+          "El responsable del tratamiento es {company}, con NIF {taxId}, titular del servicio publicado en {site}.",
           "Para cualquier asunto relacionado con tus datos: {email}.",
         ],
       },
@@ -93,7 +95,7 @@ export const legalEs: LegalTexts = {
       {
         heading: "Qué es Crowns",
         body: [
-          "Crowns es un juego de lógica gratuito operado por {company} (CIF {taxId}). Se puede jugar sin cuenta; crear una sirve para guardar el historial y participar en los rankings.",
+          "Crowns es un juego de lógica gratuito operado por {company} (NIF {taxId}). Se puede jugar sin cuenta; crear una sirve para guardar el historial y participar en los rankings.",
         ],
       },
       {

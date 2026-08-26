@@ -4,13 +4,13 @@
  */
 export const ENTITY = {
   /** Razón social completa, tal y como figura en el registro mercantil. */
-  company: "PENDIENTE — razón social",
+  company: "Manuel Girón Montes",
   /** CIF/NIF. */
-  taxId: "PENDIENTE — CIF",
+  taxId: "75868985N",
   /** Domicilio social. Déjalo vacío si prefieres no publicarlo. */
-  address: "",
+  address: "Camí del Figueralet 43, 43878 Masdenverge, Tarragona, España",
   /** Buzón para ejercer derechos y para cualquier consulta legal. */
-  email: "privacidad@softie.dev",
+  email: "info@softie.dev",
   /** Dominio del servicio. */
   site: "crowns.softie.dev",
   /** Fecha de la última revisión de los textos (AAAA-MM-DD). */

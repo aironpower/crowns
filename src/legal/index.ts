@@ -34,16 +34,18 @@ export function legalDocument(
   kind: LegalKind,
   formatDate: (value: string) => string,
 ): LegalDoc {
-  const doc = (TEXTS[locale] ?? TEXTS.es)[kind];
-  return {
-    title: doc.title,
-    intro: fill(doc.intro, formatDate),
-    sections: doc.sections.map((section) => ({
-      heading: section.heading,
-      body: section.body.map((paragraph) => fill(paragraph, formatDate)),
-      list: section.list?.map((item) => fill(item, formatDate)),
-    })),
-  };
+  const texts = TEXTS[locale] ?? TEXTS.es;
+  const doc = texts[kind];
+  const sections = doc.sections.map((section) => ({
+    heading: section.heading,
+    body: section.body.map((paragraph) => fill(paragraph, formatDate)),
+    list: section.list?.map((item) => fill(item, formatDate)),
+  }));
+  // El domicilio es opcional: solo aparece si está puesto en entity.ts.
+  if (ENTITY.address.trim() && sections.length) {
+    sections[0].body = [...sections[0].body, fill(texts.addressLine, formatDate)];
+  }
+  return { title: doc.title, intro: fill(doc.intro, formatDate), sections };
 }
 
 export { ENTITY, entityIncomplete } from "./entity";

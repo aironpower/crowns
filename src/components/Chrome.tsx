@@ -37,11 +37,11 @@ export function ThemeToggle() {
   );
 }
 
-export function LanguagePicker({ compact, onChange }: { compact?: boolean; onChange?: (locale: Locale) => void }) {
+export function LanguagePicker({ onChange }: { onChange?: (locale: Locale) => void }) {
   const { locale, setLocale, t } = useI18n();
   return (
     <select
-      className={`select${compact ? " compact" : ""}`}
+      className="select"
       aria-label={t("lang.label")}
       value={locale}
       onChange={(event) => {
@@ -51,8 +51,8 @@ export function LanguagePicker({ compact, onChange }: { compact?: boolean; onCha
       }}
     >
       {LOCALE_CODES.map((code) => (
-        <option key={code} value={code}>
-          {LOCALES[code].flag} {compact ? code.toUpperCase() : LOCALES[code].label}
+        <option key={code} value={code} lang={code}>
+          {LOCALES[code].label}
         </option>
       ))}
     </select>
@@ -85,7 +85,7 @@ export function Header() {
       </nav>
 
       <div className="header-actions">
-        <LanguagePicker compact />
+        <LanguagePicker />
         <ThemeToggle />
         {user ? (
           <button type="button" className="button ghost" onClick={() => void signOut()}>
